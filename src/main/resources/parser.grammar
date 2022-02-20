@@ -16,19 +16,19 @@ COPYRIGHT   = "Copyright (c). All rights reserved."
 
 %tokens%
 
-ATTR_LP                      = "("
-ATTR_RP                      = ")"
-TAG_LP                       = "<"
-TAG_RP                       = ">"
-TAG_LN                       = "<-"
-BLK_LP                       = "<<"
-BLK_RP                       = ">>"
-IS                           = "="
-DOT                          = "."
-SPEC                         = ".([^ ]+)"
-NUMBER                       = <<[0-9]+>>
-IDENTIFIER                   = <<[a-z]>>
-WHITESPACE                   = <<[ \t\n\r]+>> %ignore%
+ATTR_LP                     = "("
+ATTR_RP                     = ")"
+TAG_LP                      = "<"
+TAG_RP                      = ">"
+TAG_LN                      = "<-"
+BLK_LP                      = "<<"
+BLK_RP                      = ">>"
+IS                          = "="
+DOT                         = "."
+SPEC                        = ".([^ ]+)"
+NUMBER                      = <<[0-9]+>>
+IDENTIFIER                  = <<[a-z]>>
+WHITESPACE                  = <<[ \t\n\r]+>> %ignore%
 
 
 %productions%
