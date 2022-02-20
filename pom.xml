@@ -48,13 +48,14 @@
 
 				<configuration>
 					<executable>java</executable>
-					<commandlineArgs>-jar D:/apps/maven-repo/net/percederberg/grammatica/grammatica/1.5/grammatica-1.5.jar src/main/resources/parser.grammar - - javaoutput src/main/java/parser</commandlineArgs>
-					<!-- <includeProjectDependencies>true</includeProjectDependencies>
-					<includePluginDependencies>true</includePluginDependencies>
-					<<workingDirectory>src/main/resources/example.grammar</workingDirectory> -->
-					<!-- <classpathScope>system</classpathScope>
-					<includeProjectDependencies>true</includeProjectDependencies>
-					<commandlineArgs>-jar grammatica-1.5.jar src/main/resources/parser.grammar - - javaoutput src/main/java/parser</commandlineArgs> -->
+					<arguments>
+						<argument>-classpath</argument>
+						<classpath />
+						<argument>net.percederberg.grammatica.Grammatica</argument>
+						<argument>src/main/resources/parser.grammar</argument>
+						<argument>--javaoutput</argument>
+						<argument>src/main/java/parser</argument>
+					</arguments>
 				</configuration>
 
 			</plugin>
