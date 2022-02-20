@@ -28,4 +28,37 @@
 		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.0.0</version>
+
+				<executions>
+					<execution>
+						<id>generate-parser</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<configuration>
+					<executable>java</executable>
+					<commandlineArgs>-jar D:/apps/maven-repo/net/percederberg/grammatica/grammatica/1.5/grammatica-1.5.jar src/main/resources/parser.grammar - - javaoutput src/main/java/parser</commandlineArgs>
+					<!-- <includeProjectDependencies>true</includeProjectDependencies>
+					<includePluginDependencies>true</includePluginDependencies>
+					<<workingDirectory>src/main/resources/example.grammar</workingDirectory> -->
+					<!-- <classpathScope>system</classpathScope>
+					<includeProjectDependencies>true</includeProjectDependencies>
+					<commandlineArgs>-jar grammatica-1.5.jar src/main/resources/parser.grammar - - javaoutput src/main/java/parser</commandlineArgs> -->
+				</configuration>
+
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
