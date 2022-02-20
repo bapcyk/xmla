@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>name.bpck</groupId>
+	<artifactId>xmla</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Xmla</name>
+
+	<repositories>
+		<repository>
+			<id>opennms</id>
+			<name>OpenNMS</name>
+			<url>https://repo.opennms.org/maven2/</url>
+		</repository>
+	</repositories>
+
+
+	<properties>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/net.percederberg.grammatica/grammatica -->
+		<dependency>
+			<groupId>net.percederberg.grammatica</groupId>
+			<artifactId>grammatica</artifactId>
+			<version>1.5</version>
+		</dependency>
+	</dependencies>
+
+</project>

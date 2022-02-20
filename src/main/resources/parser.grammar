@@ -1,0 +1,50 @@
+%header%
+
+GRAMMARTYPE = "LL"
+
+DESCRIPTION = "A grammar for a simple arithmetic language."
+
+AUTHOR      = "BAR"
+VERSION     = "1.0"
+DATE        = "20 February 2022"
+
+LICENSE     = "Permission is granted to copy this document verbatim in any
+               medium, provided that this copyright notice is left intact."
+
+COPYRIGHT   = "Copyright (c). All rights reserved."
+
+
+%tokens%
+
+ATTR_LP                      = "("
+ATTR_RP                      = ")"
+TAG_LP                       = "<"
+TAG_RP                       = ">"
+TAG_LN                       = "<-"
+BLK_LP                       = "<<"
+BLK_RP                       = ">>"
+IS                           = "="
+DOT                          = "."
+SPEC                         = ".([^ ]+)"
+NUMBER                       = <<[0-9]+>>
+IDENTIFIER                   = <<[a-z]>>
+WHITESPACE                   = <<[ \t\n\r]+>> %ignore%
+
+
+%productions%
+
+Expression = Term [ExpressionTail] ;
+
+ExpressionTail = "+" Expression
+               | "-" Expression ;
+
+Term = Factor [TermTail] ;
+
+TermTail = "*" Term
+         | "/" Term ;
+
+Factor = Atom
+       | "(" Expression ")" ;
+
+Atom = NUMBER
+     | IDENTIFIER ;
