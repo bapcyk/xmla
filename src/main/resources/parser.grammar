@@ -29,10 +29,9 @@ QUOTE                       = <<">>
 //NOT_QUOTE                   = <<[^"]*>>
 //NOT_BLK_P                   = "[^<>]*"
 SPEC                        = <<.\([^ )]+\)>>
-//ATOM                        = "[^ ]+"
 //SNG_TAG                     = "[^ ]+\."
 //NUMBER                      = <<[0-9]+>>
-NOT_BLANK                   = <<[^ <>]+>>
+ATOM                        = <<[^ \t\n\r<>]+>>
 WHITESPACE                  = <<[ \t\n\r]>> %ignore%
 
 
@@ -50,6 +49,6 @@ Go = Multiline [Go] ;
 
 //Tag = SNG_TAG | ATOM [Attrs] ;
 
-BlockCont = (SPEC | NOT_BLANK) [BlockCont] ;
+BlockCont = (SPEC | ATOM) [BlockCont] ;
 
 Multiline = BLK_LP BlockCont BLK_RP;
