@@ -24,27 +24,32 @@ TAG_LN                      = "<-"
 BLK_LP                      = "<<"
 BLK_RP                      = ">>"
 IS                          = "="
-DOT                         = "."
-SPEC                        = ".([^ ]+)"
-NUMBER                      = <<[0-9]+>>
-IDENTIFIER                  = <<[a-z]>>
-WHITESPACE                  = <<[ \t\n\r]+>> %ignore%
+DOT                         = "\."
+QUOTE                       = <<">>
+//NOT_QUOTE                   = <<[^"]*>>
+//NOT_BLK_P                   = "[^<>]*"
+SPEC                        = <<.\([^ )]+\)>>
+//ATOM                        = "[^ ]+"
+//SNG_TAG                     = "[^ ]+\."
+//NUMBER                      = <<[0-9]+>>
+NOT_BLANK                   = <<[^ <>]+>>
+WHITESPACE                  = <<[ \t\n\r]>> %ignore%
 
 
 %productions%
 
-Expression = Term [ExpressionTail] ;
+Go = Multiline [Go] ;
 
-ExpressionTail = "+" Expression
-               | "-" Expression ;
+//AttrFlag = ATOM ;
 
-Term = Factor [TermTail] ;
+//AttrPair = ATOM IS ( ATOM | QUOTE NOT_QUOTE QUOTE ) ;
 
-TermTail = "*" Term
-         | "/" Term ;
+//Attr = AttrFlag | AttrPair ;
 
-Factor = Atom
-       | "(" Expression ")" ;
+//Attrs = ATTR_LP Attr {Attr} ATTR_RP ;
 
-Atom = NUMBER
-     | IDENTIFIER ;
+//Tag = SNG_TAG | ATOM [Attrs] ;
+
+BlockCont = (SPEC | NOT_BLANK) [BlockCont] ;
+
+Multiline = BLK_LP BlockCont BLK_RP;
