@@ -13,53 +13,18 @@
 		</repository>
 	</repositories>
 
-
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/net.percederberg.grammatica/grammatica -->
+		<!-- https://mvnrepository.com/artifact/org.parboiled/parboiled-java -->
 		<dependency>
-			<groupId>net.percederberg.grammatica</groupId>
-			<artifactId>grammatica</artifactId>
-			<version>1.5</version>
+			<groupId>org.parboiled</groupId>
+			<artifactId>parboiled-java</artifactId>
+			<version>1.4.0</version>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>3.0.0</version>
-
-				<executions>
-					<execution>
-						<id>generate-parser</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-
-				<configuration>
-					<executable>java</executable>
-					<arguments>
-						<argument>-classpath</argument>
-						<classpath />
-						<argument>net.percederberg.grammatica.Grammatica</argument>
-						<argument>src/main/resources/parser.grammar</argument>
-						<argument>--javaoutput</argument>
-						<argument>src/main/java/parser</argument>
-					</arguments>
-				</configuration>
-
-			</plugin>
-		</plugins>
-	</build>
 
 </project>
