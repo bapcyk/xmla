@@ -31,19 +31,24 @@ QUOTE                       = <<">>
 SPEC                        = <<.\([^ )]+\)>>
 //SNG_TAG                     = "[^ ]+\."
 //NUMBER                      = <<[0-9]+>>
-ATOM                        = <<[^ \t\n\r<>]+>>
+ATOM                        = <<[^ \t\n\r<>"=]+>>
 WHITESPACE                  = <<[ \t\n\r]>> %ignore%
-
+SPACE                       = " \t"
 
 %productions%
 
-Go = Multiline [Go] ;
+//Go = Multiline [Go] ;
+
+Go = ATOMS;
+//Go = Attr [Go];
 
 //AttrFlag = ATOM ;
 
-//AttrPair = ATOM IS ( ATOM | QUOTE NOT_QUOTE QUOTE ) ;
+ATOMS = ATOM [ATOMS] ;
 
-//Attr = AttrFlag | AttrPair ;
+AttrPair = ATOM IS ( ATOM | QUOTE ATOMS QUOTE ) ;
+
+Attr = ATOM | AttrPair ;
 
 //Attrs = ATTR_LP Attr {Attr} ATTR_RP ;
 
@@ -51,4 +56,4 @@ Go = Multiline [Go] ;
 
 BlockCont = (SPEC | ATOM) [BlockCont] ;
 
-Multiline = BLK_LP BlockCont BLK_RP;
+Multiline = BLK_LP BlockCont BLK_RP ;
