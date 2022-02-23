@@ -17,13 +17,16 @@
 package xmla;
 
 import org.parboiled.BaseParser;
+import org.parboiled.Parboiled;
 import org.parboiled.Rule;
 import org.parboiled.annotations.BuildParseTree;
-
+import org.parboiled.parserunners.RecoveringParseRunner;
 
 @SuppressWarnings({"InfiniteRecursion"})
 @BuildParseTree
 public class App extends BaseParser<Object> {
+	public Rule Go() { return Atom(); }
+	
 	public Rule Atom() {
 		return NoneOf("aaa");
 	}
@@ -39,5 +42,11 @@ public class App extends BaseParser<Object> {
 	public Rule HexDigit() {
         return FirstOf(CharRange('a', 'f'), CharRange('A', 'F'), CharRange('0', '9'));
     }
-	
+
+	public static void main(String[] args) {
+		App parser = Parboiled.createParser(App.class);
+		var r = new RecoveringParseRunner(parser.Go()).run("bbb").hasErrors();
+		System.out.print(r);
+//        Rule rule = parser.Clause();
+	}
 }
