@@ -16,44 +16,30 @@ COPYRIGHT   = "Copyright (c). All rights reserved."
 
 %tokens%
 
-ATTR_LP                     = "("
-ATTR_RP                     = ")"
-TAG_LP                      = "<"
-TAG_RP                      = ">"
-TAG_LN                      = "<-"
-BLK_LP                      = "<<"
-BLK_RP                      = ">>"
-IS                          = "="
-DOT                         = "\."
-QUOTE                       = <<">>
-//NOT_QUOTE                   = <<[^"]*>>
-//NOT_BLK_P                   = "[^<>]*"
-SPEC                        = <<.\([^ )]+\)>>
-//SNG_TAG                     = "[^ ]+\."
-//NUMBER                      = <<[0-9]+>>
-ATOM                        = <<[^ \t\n\r<>"=]+>>
-WHITESPACE                  = <<[ \t\n\r]>> %ignore%
-SPACE                       = " \t"
+WHITESPACE     = <<[ \t\n\r]>> %ignore%
+ATTRS_OPEN     = "("
+ATTRS_CLOSE    = ")"
+TAG_OPEN       = "<"
+TAG_CLOSE      = ">"
+LINE_TAG       = "<-"
+SPEC           = <<\.\([a-zA-Z0-9_]+\)>>
+BLOCK_OPEN     = "<<"
+BLOCK_CLOSE    = ">>"
+ATOM           = <<[a-zA-Z_][a-zA-Z0-9_]*>>
+ATTR_STR       = <<"[^"]*">>
+IS             = "="
 
 %productions%
 
-//Go = Multiline [Go] ;
+Go = Attrs [Go] ;
 
-Go = ATOMS;
-//Go = Attr [Go];
-
-//AttrFlag = ATOM ;
-
-ATOMS = ATOM [ATOMS] ;
-
-AttrPair = ATOM IS ( ATOM | QUOTE ATOMS QUOTE ) ;
-
-Attr = ATOM | AttrPair ;
-
+Attr           = ATOM | ATOM IS ATOM | ATOM IS ATTR_STR;
+Attrs          = ATTRS_OPEN Attr+ ATTRS_CLOSE;  
+ 
 //Attrs = ATTR_LP Attr {Attr} ATTR_RP ;
 
 //Tag = SNG_TAG | ATOM [Attrs] ;
 
-BlockCont = (SPEC | ATOM) [BlockCont] ;
+//BlockCont = (SPEC | ATOM) [BlockCont] ;
 
-Multiline = BLK_LP BlockCont BLK_RP ;
+//Multiline = BLK_LP BlockCont BLK_RP ;
