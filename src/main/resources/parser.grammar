@@ -17,7 +17,7 @@ COPYRIGHT   = "Copyright (c). All rights reserved."
 %tokens%
 
 WHITESPACE     = <<[ \t\n\r]>> %ignore%
-ATOM           = <<!?[a-zA-Z_][a-zA-Z0-9_]*>>
+ATOM           = <<!?[a-zA-Z_][a-zA-Z0-9_:]*>>
 ATTRS_OPEN     = "("
 ATTRS_CLOSE    = ")"
 TAG_OPEN       = "<"
@@ -29,7 +29,6 @@ BLOCK_OPEN     = "<<"
 BLOCK_CLOSE    = ">>"
 ATTR_STR       = <<"[^"]*">>
 QUOTE          = <<">>
-//ATTR_WORD      = <<[^"]+>>
 IS             = "="
 
 %productions%
@@ -37,7 +36,6 @@ IS             = "="
 Go = Tag [Go] ;
 
 Attr           = ATOM | ATOM IS ATOM | ATOM IS ATTR_STR;
-//Attr           = ATOM | ATOM IS ATOM ; //| ATOM IS QUOTE ATTR_WORD QUOTE;
 Attrs          = ATTRS_OPEN Attr+ ATTRS_CLOSE;
 Tag            = ATOM Attrs? | SINGLE_TAG;
 
