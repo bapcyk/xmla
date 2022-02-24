@@ -30,10 +30,11 @@ BLOCK_CLOSE    = ">>"
 ATTR_STR       = <<"[^"]*">>
 QUOTE          = <<">>
 IS             = "="
+BLOCK          = <<\<\<[^>]*\>\>>>
 
 %productions%
 
-Go = Tag [Go] ;
+Go = BLOCK [Go] ;
 
 Attr           = ATOM | ATOM IS ATOM | ATOM IS ATTR_STR;
 Attrs          = ATTRS_OPEN Attr+ ATTRS_CLOSE;
