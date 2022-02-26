@@ -2,9 +2,9 @@
 
 GRAMMARTYPE = "LL"
 
-DESCRIPTION = "A grammar for a simple arithmetic language."
+DESCRIPTION = "A grammar for a XMLA."
 
-AUTHOR      = "BAR"
+AUTHOR      = "Bapcyk"
 VERSION     = "1.0"
 DATE        = "20 February 2022"
 
@@ -37,16 +37,6 @@ Go = Node [Go];
 
 Attr           = ATOM | ATOM IS ATOM | ATOM IS ATTR_STR;
 Attrs          = ATTRS_OPEN Attr+ ATTRS_CLOSE;
-Tag            = ATOM Attrs? | SINGLE_TAG;
-//Node           = Tag LINE_TAG NodeCont | Tag TAG_OPEN NodeCont? TAG_CLOSE;
-Node           = Tag (LINE_TAG NodeCont | TAG_OPEN NodeCont? TAG_CLOSE)?;
+Tag            = ATOM Attrs?;
+Node           = SINGLE_TAG | Tag (LINE_TAG NodeCont | TAG_OPEN NodeCont? TAG_CLOSE);
 NodeCont       = BLOCK | SPEC | Node+;
-
-
-//Attrs = ATTR_LP Attr {Attr} ATTR_RP ;
-
-//Tag = SNG_TAG | ATOM [Attrs] ;
-
-//BlockCont = (SPEC | ATOM) [BlockCont] ;
-
-//Multiline = BLK_LP BlockCont BLK_RP ;
