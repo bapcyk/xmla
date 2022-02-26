@@ -1,6 +1,14 @@
 p <
 	a(href="www") <
 		br. br. p<>>
-	a<>
-	c <- <<alalalala>>
+	a<
+	<<aaaaa>><<aaaaa>>
+	br.
+	br.
+	<<aaaaa>>
+	>
+	c <- <<block text| alalalala
+		bbbbb
+		cccc>>
+
 >
