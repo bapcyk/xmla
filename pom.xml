@@ -51,7 +51,7 @@
 						<argument>-classpath</argument>
 						<classpath />
 						<argument>net.percederberg.grammatica.Grammatica</argument>
-						<argument>src/main/resources/parser.grammar</argument>
+						<argument>src/main/resources/xmla.grammar</argument>
 						<argument>--javaoutput</argument>
 						<argument>src/main/java/parser</argument>
 					</arguments>
