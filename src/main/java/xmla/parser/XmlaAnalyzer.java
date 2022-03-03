@@ -9,6 +9,8 @@
  * Copyright (c). All rights reserved.
  */
 
+package xmla.parser;
+
 import net.percederberg.grammatica.parser.Analyzer;
 import net.percederberg.grammatica.parser.Node;
 import net.percederberg.grammatica.parser.ParseException;
@@ -21,7 +23,7 @@ import net.percederberg.grammatica.parser.Token;
  * @author   Bapcyk
  * @version  1.0
  */
-abstract class XmlaAnalyzer extends Analyzer {
+public abstract class XmlaAnalyzer extends Analyzer {
 
     /**
      * Called when entering a parse tree node.

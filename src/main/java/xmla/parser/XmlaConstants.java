@@ -9,13 +9,15 @@
  * Copyright (c). All rights reserved.
  */
 
+package xmla.parser;
+
 /**
  * An interface with constants for the parser and tokenizer.
  *
  * @author   Bapcyk
  * @version  1.0
  */
-interface XmlaConstants {
+public interface XmlaConstants {
 
     /**
      * A token identity constant.

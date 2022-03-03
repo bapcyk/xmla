@@ -9,6 +9,8 @@
  * Copyright (c). All rights reserved.
  */
 
+package xmla.parser;
+
 import java.io.Reader;
 
 import net.percederberg.grammatica.parser.ParserCreationException;
@@ -23,7 +25,7 @@ import net.percederberg.grammatica.parser.Tokenizer;
  * @author   Bapcyk
  * @version  1.0
  */
-class XmlaParser extends RecursiveDescentParser {
+public class XmlaParser extends RecursiveDescentParser {
 
     /**
      * A generated production node identity constant.

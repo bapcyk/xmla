@@ -1,5 +1,7 @@
 package xmla;
 
+import xmla.parser.XmlaAnalyzer;
+
 
 public class App {
 

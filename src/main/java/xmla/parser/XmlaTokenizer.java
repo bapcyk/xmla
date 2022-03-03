@@ -9,6 +9,8 @@
  * Copyright (c). All rights reserved.
  */
 
+package xmla.parser;
+
 import java.io.Reader;
 
 import net.percederberg.grammatica.parser.ParserCreationException;
@@ -21,7 +23,7 @@ import net.percederberg.grammatica.parser.Tokenizer;
  * @author   Bapcyk
  * @version  1.0
  */
-class XmlaTokenizer extends Tokenizer {
+public class XmlaTokenizer extends Tokenizer {
 
     /**
      * Creates a new tokenizer for the specified input stream.
