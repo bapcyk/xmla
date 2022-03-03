@@ -54,6 +54,8 @@
 						<argument>src/main/resources/xmla.grammar</argument>
 						<argument>--javaoutput</argument>
 						<argument>src/main/java/xmla</argument>
+						<argument>--javapackage</argument>
+						<argument>xmla</argument>
 					</arguments>
 				</configuration>
 

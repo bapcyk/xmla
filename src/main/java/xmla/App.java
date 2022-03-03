@@ -1,7 +1,5 @@
 package xmla;
 
-import parser.XmlaAnalyzer;
-
 
 public class App {
 
@@ -18,8 +16,6 @@ public class App {
 		}
 		return 0;
 	}
-	
-	
 
 }
 
