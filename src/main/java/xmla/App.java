@@ -9,9 +9,11 @@ import org.w3c.dom.*;
 import net.percederberg.grammatica.parser.Node;
 import net.percederberg.grammatica.parser.ParseException;
 import net.percederberg.grammatica.parser.ParserCreationException;
+import net.percederberg.grammatica.parser.Production;
 import net.percederberg.grammatica.parser.Token;
 import xmla.parser.XmlaAnalyzer;
 import xmla.parser.XmlaParser;
+
 
 public class App {
 
@@ -50,10 +52,9 @@ public class App {
         public static void main(String[] args) {
                 if (2 != args.length) {
                         System.out.print("Syntax error: xmla|xml FILE");
-//                        return 1;
+                        System.exit(1);
                 } else {
                         try {
-
                                 if (args[0].equals("xmla")) {
                                         App app;
                                         app = new App();
@@ -62,15 +63,14 @@ public class App {
                                 } else if (args[0].equals("xml")) {
                                         System.out.print("AS XML");
                                 }
-
                         } catch (ParserConfigurationException | TransformerException e) {
                                 e.printStackTrace();
                         }
                 }
-//                return 0;
         }
 
 }
+
 
 class ArithmeticCalculator extends XmlaAnalyzer {
 
@@ -79,4 +79,110 @@ class ArithmeticCalculator extends XmlaAnalyzer {
                 node.addValue(new String(node.getImage()));
                 return node;
         }
+
+        @Override
+        protected Node exitAttrsOpen(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitAttrsClose(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitTagOpen(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitTagClose(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitSingleTag(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitLineTag(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitSpec(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitAttrStr(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitQuote(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitIs(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitBlock(Token node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitGo(Production node) {
+                return node;
+        }
+
+        @Override // TODO ??
+        protected void childGo(Production node, Node child) {
+        }
+
+        @Override
+        protected Node exitAttr(Production node) {
+                return node;
+        }
+
+        @Override
+        protected void childAttr(Production node, Node child) {
+        }
+
+        @Override
+        protected Node exitAttrs(Production node) {
+                return node;
+        }
+
+        @Override
+        protected Node exitTag(Production node) {
+                return node;
+        }
+
+        @Override
+        protected void childTag(Production node, Node child) {
+        }
+
+        @Override
+        protected Node exitNode(Production node) {
+                return node;
+        }
+
+        @Override
+        protected void childNode(Production node, Node child) {
+        }
+
+        @Override
+        protected Node exitNodeCont(Production node) {
+                return node;
+        }
+
+        @Override
+        protected void childNodeCont(Production node, Node child) {
+        }
+
 }
