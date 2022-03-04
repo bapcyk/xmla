@@ -9,11 +9,11 @@ import org.w3c.dom.*;
 import net.percederberg.grammatica.parser.Node;
 import net.percederberg.grammatica.parser.ParseException;
 import net.percederberg.grammatica.parser.ParserCreationException;
+import net.percederberg.grammatica.parser.ParserLogException;
 import net.percederberg.grammatica.parser.Production;
 import net.percederberg.grammatica.parser.Token;
 import xmla.parser.XmlaAnalyzer;
 import xmla.parser.XmlaParser;
-
 
 public class App {
 
@@ -38,11 +38,20 @@ public class App {
 
         protected void xmlaToXml(String filePath) {
                 try {
-                        XmlaParser parser = new XmlaParser(new FileReader(new File(filePath)),
+                        XmlaParser parser = new XmlaParser(
+                                new FileReader(new File(filePath)),
                                 new ArithmeticCalculator());
-                } catch (ParserCreationException | FileNotFoundException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        parser.prepare();
+                        parser.parse();
+                } catch (ParserCreationException e) {
+                        System.out.format("Cannot create parser: %s", e.getMessage());
+                        System.exit(1);
+                } catch (ParserLogException e) {
+                        System.out.format("Cannot parse: %s", e.getMessage());
+                        System.exit(1);
+                } catch (FileNotFoundException e) {
+                        System.out.format("Cannot find input file: %s", e.getMessage());
+                        System.exit(1);
                 }
         }
 
@@ -51,7 +60,7 @@ public class App {
 
         public static void main(String[] args) {
                 if (2 != args.length) {
-                        System.out.print("Syntax error: xmla|xml FILE");
+                        System.out.print("Command line error: xmla|xml FILE");
                         System.exit(1);
                 } else {
                         try {
@@ -70,7 +79,6 @@ public class App {
         }
 
 }
-
 
 class ArithmeticCalculator extends XmlaAnalyzer {
 
