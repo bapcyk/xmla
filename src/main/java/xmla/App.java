@@ -15,8 +15,8 @@ import xmla.parser.XmlaParser;
 
 public class App {
 
-        private DocumentBuilder docBuilder;
-        private Document doc;
+        private final DocumentBuilder docBuilder;
+        private final Document doc;
 
         App() throws ParserConfigurationException {
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -34,10 +34,11 @@ public class App {
                 return xmlString;
         }
 
-        protected void xmlaToXml() {
+        protected void xmlaToXml(String filePath) {
                 try {
-                        XmlaParser parser = new XmlaParser(null, new ArithmeticCalculator());
-                } catch (ParserCreationException e) {
+                        XmlaParser parser = new XmlaParser(new FileReader(new File(filePath)),
+                                new ArithmeticCalculator());
+                } catch (ParserCreationException | FileNotFoundException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                 }
@@ -46,18 +47,19 @@ public class App {
         protected void xmlToXmla() {
         }
 
-        public static int main(String[] args) {
+        public static void main(String[] args) {
                 if (2 != args.length) {
                         System.out.print("Syntax error: xmla|xml FILE");
-                        return 1;
+//                        return 1;
                 } else {
                         try {
 
-                                if (args[1].equals("xmla")) {
+                                if (args[0].equals("xmla")) {
                                         App app;
                                         app = new App();
+                                        app.xmlaToXml(args[1]);
                                         System.out.print(app.dumpXml());
-                                } else if (args[1].equals("xml")) {
+                                } else if (args[0].equals("xml")) {
                                         System.out.print("AS XML");
                                 }
 
@@ -65,13 +67,14 @@ public class App {
                                 e.printStackTrace();
                         }
                 }
-                return 0;
+//                return 0;
         }
 
 }
 
 class ArithmeticCalculator extends XmlaAnalyzer {
 
+        @Override
         protected Node exitAtom(Token node) throws ParseException {
                 node.addValue(new String(node.getImage()));
                 return node;
