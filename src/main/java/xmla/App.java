@@ -40,7 +40,7 @@ public class App {
                 try {
                         XmlaParser parser = new XmlaParser(
                                 new FileReader(new File(filePath)),
-                                new ArithmeticCalculator(doc));
+                                new MyXmlaAnalyzer(doc));
                         parser.prepare();
                         parser.parse();
                 } catch (ParserCreationException e) {
@@ -80,11 +80,11 @@ public class App {
 
 }
 
-class ArithmeticCalculator extends XmlaAnalyzer {
+class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         private final Document doc;
         
-        public ArithmeticCalculator(Document doc) {
+        public MyXmlaAnalyzer(Document doc) {
                 this.doc = doc;
         }
         
