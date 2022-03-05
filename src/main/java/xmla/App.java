@@ -40,7 +40,7 @@ public class App {
                 try {
                         XmlaParser parser = new XmlaParser(
                                 new FileReader(new File(filePath)),
-                                new ArithmeticCalculator());
+                                new ArithmeticCalculator(doc));
                         parser.prepare();
                         parser.parse();
                 } catch (ParserCreationException e) {
@@ -82,6 +82,12 @@ public class App {
 
 class ArithmeticCalculator extends XmlaAnalyzer {
 
+        private final Document doc;
+        
+        public ArithmeticCalculator(Document doc) {
+                this.doc = doc;
+        }
+        
         @Override
         protected Node exitAtom(Token node) throws ParseException {
                 node.addValue(new String(node.getImage()));
