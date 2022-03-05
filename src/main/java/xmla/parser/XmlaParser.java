@@ -96,8 +96,7 @@ public class XmlaParser extends RecursiveDescentParser {
         pattern = new ProductionPattern(XmlaConstants.GO,
                                         "Go");
         alt = new ProductionPatternAlternative();
-        alt.addProduction(XmlaConstants.NODE, 1, 1);
-        alt.addProduction(XmlaConstants.GO, 0, 1);
+        alt.addProduction(XmlaConstants.NODE, 1, -1);
         pattern.addAlternative(alt);
         addPattern(pattern);
 
@@ -149,8 +148,7 @@ public class XmlaParser extends RecursiveDescentParser {
         pattern = new ProductionPattern(XmlaConstants.NODE_CONT,
                                         "NodeCont");
         alt = new ProductionPatternAlternative();
-        alt.addProduction(SUBPRODUCTION_2, 1, 1);
-        alt.addProduction(XmlaConstants.NODE_CONT, 0, 1);
+        alt.addProduction(SUBPRODUCTION_2, 1, -1);
         pattern.addAlternative(alt);
         addPattern(pattern);
 

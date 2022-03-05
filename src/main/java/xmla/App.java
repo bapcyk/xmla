@@ -87,7 +87,7 @@ public class App {
 
 class MyXmlaAnalyzer extends XmlaAnalyzer {
 
-        private final Document doc; // FIXME use it instead of tuples, strings and similar
+        private final Document doc;
 
         public MyXmlaAnalyzer(Document doc) {
                 this.doc = doc;
@@ -179,7 +179,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitBlock(Token node) {
-                // TODO indentation
+                // TODO handle indentation rules
                 Text t = doc.createTextNode(strip(node.getImage(), 2));
                 node.addValue(t);
                 return node;
@@ -242,9 +242,8 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                         String v1 = (String) values.get(1);
                         if (v1.equals("<-")) {
                         // line tag
-                                Element tag = (Element) values.get(0);
-//                                ((Element) values.get(1)).
-                                tag.appendChild(null);
+//                                Element tag = (Element) values.get(0);
+//                                tag.appendChild(null);
                         } else if (v1.equals("<")) {
                         // tag open
                         }
