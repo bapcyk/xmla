@@ -88,9 +88,13 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 this.doc = doc;
         }
         
+        protected static String tokenAsString(Token node) {
+                return new String(node.getImage());
+        }
+        
         @Override
         protected Node exitAtom(Token node) throws ParseException {
-                node.addValue(new String(node.getImage()));
+                node.addValue(tokenAsString(node));
                 return node;
         }
 
