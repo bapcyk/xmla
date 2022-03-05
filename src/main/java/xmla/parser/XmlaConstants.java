@@ -72,17 +72,12 @@ public interface XmlaConstants {
     /**
      * A token identity constant.
      */
-    public static final int QUOTE = 1011;
+    public static final int IS = 1011;
 
     /**
      * A token identity constant.
      */
-    public static final int IS = 1012;
-
-    /**
-     * A token identity constant.
-     */
-    public static final int BLOCK = 1013;
+    public static final int BLOCK = 1012;
 
     /**
      * A production node identity constant.

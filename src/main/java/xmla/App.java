@@ -1,5 +1,6 @@
 package xmla;
 
+
 import java.io.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -14,6 +15,7 @@ import net.percederberg.grammatica.parser.Production;
 import net.percederberg.grammatica.parser.Token;
 import xmla.parser.XmlaAnalyzer;
 import xmla.parser.XmlaParser;
+
 
 public class App {
 
@@ -80,6 +82,7 @@ public class App {
 
 }
 
+
 class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         private final Document doc;
@@ -88,13 +91,32 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 this.doc = doc;
         }
 
-        protected static String tokenAsString(Token node) {
-                return new String(node.getImage());
+        protected static String chop(String s) {
+                final int len = s.length();
+                if (len > 0) {
+                        return s.substring(0, s.length() - 1);
+                } else {
+                        return s;
+                }
+        }
+
+        protected static String strip(String s, int ntimes) {
+                final int len = s.length();
+                if (len >= ntimes * 2) {
+                        return s.substring(ntimes, len - ntimes);
+                } else {
+                        return "";
+                }
+        }
+
+        protected static String specAsEntity(String s) {
+                final int len = s.length();
+                return "&" + s.substring(2, len - 2) + ";";
         }
 
         @Override
         protected Node exitAtom(Token node) throws ParseException {
-                node.addValue(tokenAsString(node));
+                node.addValue(node.getImage());
                 return node;
         }
 
@@ -120,6 +142,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitSingleTag(Token node) {
+                node.addValue(chop(node.getImage()));
                 return node;
         }
 
@@ -130,16 +153,13 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitSpec(Token node) {
+                node.addValue(specAsEntity(node.getImage()));
                 return node;
         }
 
         @Override
         protected Node exitAttrStr(Token node) {
-                return node;
-        }
-
-        @Override
-        protected Node exitQuote(Token node) {
+                node.addValue(strip(node.getImage(), 1));
                 return node;
         }
 
@@ -204,3 +224,4 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         }
 
 }
+

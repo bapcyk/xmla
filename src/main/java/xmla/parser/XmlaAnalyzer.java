@@ -61,9 +61,6 @@ public abstract class XmlaAnalyzer extends Analyzer {
         case XmlaConstants.ATTR_STR:
             enterAttrStr((Token) node);
             break;
-        case XmlaConstants.QUOTE:
-            enterQuote((Token) node);
-            break;
         case XmlaConstants.IS:
             enterIs((Token) node);
             break;
@@ -121,8 +118,6 @@ public abstract class XmlaAnalyzer extends Analyzer {
             return exitSpec((Token) node);
         case XmlaConstants.ATTR_STR:
             return exitAttrStr((Token) node);
-        case XmlaConstants.QUOTE:
-            return exitQuote((Token) node);
         case XmlaConstants.IS:
             return exitIs((Token) node);
         case XmlaConstants.BLOCK:
@@ -389,30 +384,6 @@ public abstract class XmlaAnalyzer extends Analyzer {
      * @throws ParseException if the node analysis discovered errors
      */
     protected Node exitAttrStr(Token node) throws ParseException {
-        return node;
-    }
-
-    /**
-     * Called when entering a parse tree node.
-     *
-     * @param node           the node being entered
-     *
-     * @throws ParseException if the node analysis discovered errors
-     */
-    protected void enterQuote(Token node) throws ParseException {
-    }
-
-    /**
-     * Called when exiting a parse tree node.
-     *
-     * @param node           the node being exited
-     *
-     * @return the node to add to the parse tree, or
-     *         null if no parse tree should be created
-     *
-     * @throws ParseException if the node analysis discovered errors
-     */
-    protected Node exitQuote(Token node) throws ParseException {
         return node;
     }
 

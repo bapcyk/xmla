@@ -108,12 +108,6 @@ public class XmlaTokenizer extends Tokenizer {
                                    "\"[^\"]*\"");
         addPattern(pattern);
 
-        pattern = new TokenPattern(XmlaConstants.QUOTE,
-                                   "QUOTE",
-                                   TokenPattern.REGEXP_TYPE,
-                                   "\"");
-        addPattern(pattern);
-
         pattern = new TokenPattern(XmlaConstants.IS,
                                    "IS",
                                    TokenPattern.STRING_TYPE,
