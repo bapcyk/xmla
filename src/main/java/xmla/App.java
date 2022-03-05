@@ -83,15 +83,15 @@ public class App {
 class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         private final Document doc;
-        
+
         public MyXmlaAnalyzer(Document doc) {
                 this.doc = doc;
         }
-        
+
         protected static String tokenAsString(Token node) {
                 return new String(node.getImage());
         }
-        
+
         @Override
         protected Node exitAtom(Token node) throws ParseException {
                 node.addValue(tokenAsString(node));
