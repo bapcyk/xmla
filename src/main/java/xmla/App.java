@@ -1,7 +1,9 @@
 package xmla;
 
 
+import com.speedment.common.tuple.Tuples;
 import java.io.*;
+import java.util.ArrayList;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -184,6 +186,12 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitAttr(Production node) {
+                ArrayList values = getChildValues(node);
+                if (1 == values.size()) {
+                        node.addValue(Tuples.of(values.get(0), ""));
+                } else /*if (3 == values.size())*/ {
+                        node.addValue(Tuples.of(values.get(0), values.get(2)));
+                }
                 return node;
         }
 

@@ -99,7 +99,7 @@ public class XmlaTokenizer extends Tokenizer {
         pattern = new TokenPattern(XmlaConstants.SPEC,
                                    "SPEC",
                                    TokenPattern.REGEXP_TYPE,
-                                   "\\.\\([a-zA-Z0-9_]+\\)");
+                                   "\\.\\([a-zA-Z0-9_#]+\\)");
         addPattern(pattern);
 
         pattern = new TokenPattern(XmlaConstants.ATTR_STR,
