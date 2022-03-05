@@ -38,4 +38,4 @@ Attr           = ATOM | ATOM IS ATOM | ATOM IS ATTR_STR;
 Attrs          = ATTRS_OPEN Attr+ ATTRS_CLOSE;
 Tag            = ATOM Attrs?;
 Node           = SINGLE_TAG | Tag (LINE_TAG NodeCont | TAG_OPEN NodeCont? TAG_CLOSE);
-NodeCont       = (BLOCK | SPEC | Node) [NodeCont];
+NodeCont       = (BLOCK | SPEC | Node) NodeCont?;

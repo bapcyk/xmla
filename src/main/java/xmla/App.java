@@ -1,7 +1,7 @@
 package xmla;
 
 
-import com.speedment.common.tuple.Tuples;
+// TODO remove dependency tuples?
 import java.io.*;
 import java.util.ArrayList;
 import javax.xml.parsers.*;
@@ -87,7 +87,7 @@ public class App {
 
 class MyXmlaAnalyzer extends XmlaAnalyzer {
 
-        private final Document doc;
+        private final Document doc; // FIXME use it instead of tuples, strings and similar
 
         public MyXmlaAnalyzer(Document doc) {
                 this.doc = doc;
@@ -116,6 +116,9 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 return "&" + s.substring(2, len - 2) + ";";
         }
 
+        /////////////////////////////////////////////////////////////////
+        //                           Handlers
+        /////////////////////////////////////////////////////////////////
         @Override
         protected Node exitAtom(Token node) throws ParseException {
                 node.addValue(node.getImage());
@@ -134,6 +137,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitTagOpen(Token node) {
+                node.addValue("<"); // to detect different branches
                 return node;
         }
 
@@ -144,18 +148,21 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitSingleTag(Token node) {
-                node.addValue(chop(node.getImage()));
+                Element el = doc.createElement(chop(node.getImage()));
+                node.addValue(el);
                 return node;
         }
 
         @Override
         protected Node exitLineTag(Token node) {
+                node.addValue("<-"); // to detect different branches
                 return node;
         }
 
         @Override
         protected Node exitSpec(Token node) {
-                node.addValue(specAsEntity(node.getImage()));
+                EntityReference ent = doc.createEntityReference(specAsEntity(node.getImage()));
+                node.addValue(ent);
                 return node;
         }
 
@@ -172,6 +179,9 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitBlock(Token node) {
+                // TODO indentation
+                Text t = doc.createTextNode(strip(node.getImage(), 2));
+                node.addValue(t);
                 return node;
         }
 
@@ -180,55 +190,72 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 return node;
         }
 
-        @Override // TODO ??
-        protected void childGo(Production node, Node child) {
-        }
-
         @Override
         protected Node exitAttr(Production node) {
                 ArrayList values = getChildValues(node);
                 if (1 == values.size()) {
-                        node.addValue(Tuples.of(values.get(0), ""));
-                } else /*if (3 == values.size())*/ {
-                        node.addValue(Tuples.of(values.get(0), values.get(2)));
+                        Attr attr = doc.createAttribute((String) values.get(0));
+                        attr.setValue("");
+                        node.addValue(attr);
+                } else if (3 == values.size()) {
+                        Attr attr = doc.createAttribute((String) values.get(0));
+                        attr.setValue((String) values.get(2));
+                        node.addValue(attr);
                 }
                 return node;
         }
 
         @Override
-        protected void childAttr(Production node, Node child) {
-        }
-
-        @Override
         protected Node exitAttrs(Production node) {
+                ArrayList values = getChildValues(node);
+                final int len = values.size();
+                if (2 < len) {
+                        ArrayList values1 = (ArrayList) values.subList(1, len - 2);
+//                        node.removeAllValues();
+                        node.addValues(values1);
+                }
                 return node;
         }
 
         @Override
         protected Node exitTag(Production node) {
+                ArrayList values = getChildValues(node);
+                final int len = values.size();
+                if (0 < len) {
+                        Element el = doc.createElement((String) values.get(0));
+                        int i = 1;
+                        while (i < len) {
+                                el.setAttributeNode((Attr) values.get(i));
+                                i++;
+                        }
+                        node.addValue(el);
+                }
                 return node;
-        }
-
-        @Override
-        protected void childTag(Production node, Node child) {
         }
 
         @Override
         protected Node exitNode(Production node) {
+                ArrayList values = getChildValues(node);
+                final int len = values.size();
+                if (1 == len) {
+                } else if (2 < len) {
+                        String v1 = (String) values.get(1);
+                        if (v1.equals("<-")) {
+                        // line tag
+                                Element tag = (Element) values.get(0);
+//                                ((Element) values.get(1)).
+                                tag.appendChild(null);
+                        } else if (v1.equals("<")) {
+                        // tag open
+                        }
+                }
                 return node;
-        }
-
-        @Override
-        protected void childNode(Production node, Node child) {
         }
 
         @Override
         protected Node exitNodeCont(Production node) {
+                node.addValues(getChildValues(node));
                 return node;
-        }
-
-        @Override
-        protected void childNodeCont(Production node, Node child) {
         }
 
 }
