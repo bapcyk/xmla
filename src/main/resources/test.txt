@@ -2,10 +2,11 @@ p1 <
 	a(href="www") <
 		br. br. p2<>>
 	a<
-	<<aaaaa>><<aaaaa>>
+	<<aaaaa>><<bbbbb>>
 	br.
 	br.
-	<<aaaaa>>
+        .(lt)
+	<<cccc>>
 	>
 	c <- <<block text| alalalala
 		bbbbb

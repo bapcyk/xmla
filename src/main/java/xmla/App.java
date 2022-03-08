@@ -2,6 +2,7 @@ package xmla;
 
 
 // TODO remove dependency tuples?
+import java.beans.Beans;
 import java.io.*;
 import java.util.ArrayList;
 import javax.xml.parsers.*;
@@ -113,7 +114,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         protected static String specAsEntity(String s) {
                 final int len = s.length();
-                return "&" + s.substring(2, len - 2) + ";";
+                return s.substring(2, len - 1);
         }
 
         /////////////////////////////////////////////////////////////////
@@ -253,7 +254,18 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitNodeCont(Production node) {
-                node.addValues(getChildValues(node));
+                ArrayList values = getChildValues(node);
+                for (var item : values) {
+                        System.out.print(item);
+                        if (item instanceof Text) {
+                                System.out.println(" text!");
+                        } else if (item instanceof EntityReference) {
+                                System.out.println(" Ref!");
+                        } else {
+                                System.out.println(" NODE!");
+                        }
+                }
+//                node.addValues(getChildValues(node));
                 return node;
         }
 
