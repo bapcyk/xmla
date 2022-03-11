@@ -242,11 +242,13 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 } else if (2 < len) {
                         String v1 = (String) values.get(1);
                         if (v1.equals("<-")) {
+                                System.out.print("PPP <-");
                         // line tag
 //                                Element tag = (Element) values.get(0);
 //                                tag.appendChild(null);
                         } else if (v1.equals("<")) {
                         // tag open
+                                System.out.print("PPP <");                        
                         }
                 }
                 return node;
@@ -265,7 +267,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                                 System.out.println(" NODE!");
                         }
                 }
-//                node.addValues(getChildValues(node));
+                node.addValues(getChildValues(node));
                 return node;
         }
 
