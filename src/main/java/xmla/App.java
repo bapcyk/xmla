@@ -65,7 +65,7 @@ public class App {
 
         public static void main(String[] args) {
                 if (2 != args.length) {
-                        System.out.print("Command line error: xmla|xml FILE");
+                        System.out.println("Command line error: xmla|xml FILE");
                         System.exit(1);
                 } else {
                         try {
@@ -73,9 +73,9 @@ public class App {
                                         App app;
                                         app = new App();
                                         app.xmlaToXml(args[1]);
-                                        System.out.print(app.dumpXml());
+                                        System.out.println(app.dumpXml());
                                 } else if (args[0].equals("xml")) {
-                                        System.out.print("AS XML");
+                                        System.out.println("AS XML");
                                 }
                         } catch (ParserConfigurationException | TransformerException e) {
                                 e.printStackTrace();
@@ -240,17 +240,19 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 final int len = values.size();
                 if (1 == len) {
                 } else if (2 < len) {
+                        Element tag = (Element) values.get(0);
                         String v1 = (String) values.get(1);
                         if (v1.equals("<-")) {
-                                System.out.print("PPP <-");
-                        // line tag
+                                System.out.println("PPP <-");
+                                // line tag
 //                                Element tag = (Element) values.get(0);
 //                                tag.appendChild(null);
                         } else if (v1.equals("<")) {
-                        // tag open
-                                System.out.print("PPP <");                        
+                                // tag open
+                                System.out.println("PPP <");
                         }
                 }
+                node.addValues(values);
                 return node;
         }
 
@@ -258,7 +260,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         protected Node exitNodeCont(Production node) {
                 ArrayList values = getChildValues(node);
                 for (var item : values) {
-                        System.out.print(item);
+//                        System.out.println(item);
                         if (item instanceof Text) {
                                 System.out.println(" text!");
                         } else if (item instanceof EntityReference) {
@@ -267,7 +269,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                                 System.out.println(" NODE!");
                         }
                 }
-                node.addValues(getChildValues(node));
+                node.addValues(values);
                 return node;
         }
 

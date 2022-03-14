@@ -6,6 +6,9 @@ p1 <
 	br.
 	br.
         .(lt)
+        bbb <
+            <<bbbb>>
+        >
 	<<cccc>>
 	>
 	c <- <<block text| alalalala
