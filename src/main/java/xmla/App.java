@@ -188,6 +188,11 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
         @Override
         protected Node exitGo(Production node) {
+                ArrayList values = getChildValues(node);
+                // TODO
+                /*if (1 == values.size()) {
+                        doc.appendChild((Element)values.get(0));
+                }*/
                 return node;
         }
 
@@ -251,6 +256,8 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                                 // tag open
                                 System.out.println("PPP <");
                         }
+                        if (">" == values.get(len - 1)) values.remove(len - 1);
+                        values.remove(1);
                 }
                 node.addValues(values);
                 return node;
