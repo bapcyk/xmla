@@ -36,6 +36,7 @@ public class App {
         Transformer transformer = transformerFactory.newTransformer();
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(new StringWriter()); // new File("C:\\testing.xml"));
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.transform(source, result);
         String xmlString = result.getWriter().toString();
         return xmlString;
@@ -239,6 +240,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             Element el = doc.createElement((String) values.get(0));
             int i = 1;
             while (i < len) {
+                // FIXME never enters here
                 el.setAttributeNode((Attr) values.get(i));
                 i++;
             }
@@ -276,10 +278,8 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 }
             }
         }
-        // TODO maybe remove all except the first
         node.removeAllValues();
         node.addValue(values.get(0));
-//        node.addValues(values);
         return node;
     }
 
