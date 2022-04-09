@@ -244,7 +244,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 ArrayList values = getChildValues(node);
                 final int len = values.size();
                 if (1 == len) {
-                } else if (2 < len) {
+                } else if (2 <= len) {
                         Element tag = (Element) values.get(0);
                         String v1 = (String) values.get(1);
                         if (v1.equals("<-")) {
