@@ -189,19 +189,8 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
     @Override
     protected Node exitGo(Production node) {
-        // FIXME p1<...> нужно добавлять рекурсивно, а тут values - все нутро почему-то
-        // FIXME и ошибка оттуда, что одно из них - это TextImpl и его якобы нельзя
-        // FIXME добавлять напрямую сюда
         ArrayList values = getChildValues(node);
         doc.appendChild((Element) values.get(0));
-        System.out.print(values.size());
-//                for (var val : values) {
-//                        doc.appendChild((Element)val);
-//                }
-        // TODO
-//        if (1 < values.size()) {
-//            doc.appendChild((Element) values.get(15));
-//        }
         return node;
     }
 
@@ -214,8 +203,8 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             node.removeAllValues();
             node.addValue(attr);
         } else if (2 == values.size()) {
-            /* 2, not 3 for rules "ATOM IS ATOM | ATOM IS ATTR_STR" bcz no a special handling of "IS"
-            just default handling */
+            // 2, not 3 for rules "ATOM IS ATOM | ATOM IS ATTR_STR" bcz no a special handling of "IS"
+            // just default handling
             Attr attr = doc.createAttribute((String) values.get(0));
             attr.setValue((String) values.get(1));
             node.removeAllValues();
