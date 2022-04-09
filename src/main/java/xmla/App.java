@@ -192,6 +192,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         // FIXME и ошибка оттуда, что одно из них - это TextImpl и его якобы нельзя
         // FIXME добавлять напрямую сюда
         ArrayList values = getChildValues(node);
+        doc.appendChild((Element) values.get(0));
         System.out.print(values.size());
 //                for (var val : values) {
 //                        doc.appendChild((Element)val);
@@ -251,6 +252,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         ArrayList values = getChildValues(node);
         final int len = values.size();
         if (1 == len) {
+            // TODO
         } else if (2 <= len) {
             Element tag = (Element) values.get(0);
             String v1 = (String) values.get(1);
@@ -274,7 +276,10 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 }
             }
         }
-        node.addValues(values);
+        // TODO maybe remove all except the first
+        node.removeAllValues();
+        node.addValue(values.get(0));
+//        node.addValues(values);
         return node;
     }
 
