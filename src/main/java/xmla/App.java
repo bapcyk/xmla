@@ -211,10 +211,14 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         if (1 == values.size()) {
             Attr attr = doc.createAttribute((String) values.get(0));
             attr.setValue("");
+            node.removeAllValues();
             node.addValue(attr);
-        } else if (3 == values.size()) {
+        } else if (2 == values.size()) {
+            /* 2, not 3 for rules "ATOM IS ATOM | ATOM IS ATTR_STR" bcz no a special handling of "IS"
+            just default handling */
             Attr attr = doc.createAttribute((String) values.get(0));
-            attr.setValue((String) values.get(2));
+            attr.setValue((String) values.get(1));
+            node.removeAllValues();
             node.addValue(attr);
         }
         return node;
@@ -223,11 +227,9 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
     @Override
     protected Node exitAttrs(Production node) {
         ArrayList values = getChildValues(node);
-        final int len = values.size();
-        if (2 < len) {
-            ArrayList values1 = (ArrayList) values.subList(1, len - 2);
-//                        node.removeAllValues();
-            node.addValues(values1);
+        node.removeAllValues();
+        for (var val : values) {
+            node.addValue(val);
         }
         return node;
     }
@@ -240,7 +242,6 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             Element el = doc.createElement((String) values.get(0));
             int i = 1;
             while (i < len) {
-                // FIXME never enters here
                 el.setAttributeNode((Attr) values.get(i));
                 i++;
             }

@@ -1,5 +1,5 @@
 p1 <
-	a(href="www") <
+	a(href="www" name="some name") <
 		br. br. p2<>>
 	a<
 	<<aaaaa>><<bbbbb>>
