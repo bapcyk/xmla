@@ -182,7 +182,14 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
     @Override
     protected Node exitBlock(Token node) {
         // TODO handle indentation rules
-        Text t = doc.createTextNode(strip(node.getImage(), 2));
+        String[] blocks = strip(node.getImage(), 2).split(" *\\| *", 2);
+        String textBlock = switch (blocks.length) {
+            case 0 -> "";
+            case 1 -> blocks[0];
+            default -> blocks[1];
+        };
+        Text t = doc.createTextNode(textBlock);
+        System.out.println(blocks);
         node.addValue(t);
         return node;
     }
