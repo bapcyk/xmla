@@ -23,7 +23,7 @@ import xmla.parser.XmlaAnalyzer;
 import xmla.parser.XmlaParser;
 
 
-enum TextFmt {
+enum BlockOpt {
     RAW,
     LINE,
     STRIP,
@@ -31,7 +31,7 @@ enum TextFmt {
     INDENT;
     
     // Like valueOf() but more flexible
-    public static TextFmt fromString(String s) {
+    public static BlockOpt fromString(String s) {
         return switch (s) {
             case "RAW", "raw", "R", "r"         -> RAW;
             case "LINE", "line", "L", "l"       -> LINE;
@@ -168,10 +168,10 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 .collect(Collectors.joining(NL));
     }
 
-    protected static String formatTextBlock(String s, List<TextFmt> fmts) {
+    protected static String formatTextBlock(String s, List<BlockOpt> fmts) {
         if (fmts.isEmpty()) return s;
         else {
-            TextFmt fmt = fmts.get(0);
+            BlockOpt fmt = fmts.get(0);
             fmts = fmts.subList(1, fmts.size());
             return switch (fmt) {
                 case RAW     -> formatTextBlock(s, fmts);
@@ -256,7 +256,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             default -> { spec = blocks[0]; text = blocks[1]; }
         }
         if (0 < spec.length()) {
-            var fmts = Arrays.asList(spec.split(" +")).stream().map(TextFmt::fromString).toList();
+            var fmts = Arrays.asList(spec.split(" +")).stream().map(BlockOpt::fromString).toList();
             text = formatTextBlock(text, fmts);
         }
         Text t = doc.createTextNode(text);
