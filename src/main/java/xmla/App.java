@@ -2,9 +2,11 @@ package xmla;
 
 
 // TODO remove dependency tuples?
-import java.beans.Beans;
+//import java.beans.Beans;
 import java.io.*;
 import java.util.ArrayList;
+import static java.util.Arrays.*;
+import java.util.List;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -18,6 +20,15 @@ import net.percederberg.grammatica.parser.Production;
 import net.percederberg.grammatica.parser.Token;
 import xmla.parser.XmlaAnalyzer;
 import xmla.parser.XmlaParser;
+
+
+enum TextFmt {
+    RAW,
+    LINE,
+    STRIP,
+    COMPACT,
+//    INDENT,
+}
 
 
 public class App {
@@ -117,6 +128,21 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         final int len = s.length();
         return s.substring(2, len - 1);
     }
+    
+    protected static String formatTextBlock(String s, List<TextFmt> fmts) {
+        if (fmts.isEmpty()) return s;
+        else {
+            TextFmt fmt = fmts.get(0);
+            fmts = fmts.subList(1, fmts.size());
+            return switch (fmt) {
+                case RAW -> formatTextBlock(s, fmts);
+                case LINE -> formatTextBlock(s.replace("(\r|\n)+", " "), fmts);
+                case STRIP -> formatTextBlock(s.strip(), fmts);
+                case COMPACT -> formatTextBlock(s.replace("(\r|\n|\t| )+", " "), fmts);
+//                case INDENT -> ;
+            };
+        }
+    }
 
     /////////////////////////////////////////////////////////////////
     //                           Handlers
@@ -182,14 +208,18 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
     @Override
     protected Node exitBlock(Token node) {
         // TODO handle indentation rules
-        String[] blocks = strip(node.getImage(), 2).split(" *\\| *", 2);
-        String textBlock = switch (blocks.length) {
-            case 0 -> "";
-            case 1 -> blocks[0];
-            default -> blocks[1];
-        };
-        Text t = doc.createTextNode(textBlock);
-        System.out.println(blocks);
+        String[] blocks = strip(node.getImage(), 2).split(" *\\|", 2);
+        String text, spec;
+        switch (blocks.length) {
+            case 0 -> { spec = ""; text = ""; }
+            case 1 -> { spec = ""; text = blocks[0]; }
+            default -> { spec = blocks[0]; text = blocks[1]; }
+        }
+        if (0 < spec.length()) {
+            var fmts = asList(spec.split(" +")).stream().map(TextFmt::valueOf).toList();
+            text = formatTextBlock(text, fmts);
+        }
+        Text t = doc.createTextNode(text);
         node.addValue(t);
         return node;
     }
