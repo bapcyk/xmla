@@ -26,8 +26,18 @@ enum TextFmt {
     RAW,
     LINE,
     STRIP,
-    COMPACT,
+    COMPACT;
 //    INDENT,
+    
+    public static TextFmt fromString(String s) {
+        return switch (s) {
+            case "RAW", "raw", "R", "r"         -> RAW;
+            case "LINE", "line", "L", "l"       -> LINE;
+            case "STRIP", "strip", "S", "s"     -> STRIP;
+            case "COMPACT", "compact", "C", "c" -> COMPACT;
+            default                             -> RAW;
+        };
+    }
 }
 
 
@@ -135,10 +145,10 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             TextFmt fmt = fmts.get(0);
             fmts = fmts.subList(1, fmts.size());
             return switch (fmt) {
-                case RAW -> formatTextBlock(s, fmts);
-                case LINE -> formatTextBlock(s.replace("(\r|\n)+", " "), fmts);
-                case STRIP -> formatTextBlock(s.strip(), fmts);
-                case COMPACT -> formatTextBlock(s.replace("(\r|\n|\t| )+", " "), fmts);
+                case RAW     -> formatTextBlock(s, fmts);
+                case LINE    -> formatTextBlock(s.replaceAll("(\r|\n)+", " "), fmts);
+                case STRIP   -> formatTextBlock(s.strip(), fmts);
+                case COMPACT -> formatTextBlock(s.replaceAll("(\r|\n|\t| )+", " "), fmts);
 //                case INDENT -> ;
             };
         }
@@ -207,16 +217,15 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
     @Override
     protected Node exitBlock(Token node) {
-        // TODO handle indentation rules
         String[] blocks = strip(node.getImage(), 2).split(" *\\|", 2);
         String text, spec;
         switch (blocks.length) {
-            case 0 -> { spec = ""; text = ""; }
-            case 1 -> { spec = ""; text = blocks[0]; }
+            case 0  -> { spec = ""; text = ""; }
+            case 1  -> { spec = ""; text = blocks[0]; }
             default -> { spec = blocks[0]; text = blocks[1]; }
         }
         if (0 < spec.length()) {
-            var fmts = asList(spec.split(" +")).stream().map(TextFmt::valueOf).toList();
+            var fmts = asList(spec.split(" +")).stream().map(TextFmt::fromString).toList();
             text = formatTextBlock(text, fmts);
         }
         Text t = doc.createTextNode(text);

@@ -11,7 +11,7 @@ p1 <
         >
 	<<cccc>>
 	>
-	c <- <<LINE|   alalalala
+	c <- <<c s|   alalalala
 		bbbbb
 		cccc>>
 
