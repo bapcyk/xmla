@@ -1,17 +1,17 @@
 p1 <
-	a(href="www" name="some name" xxx) <
+	a(href=www name="some name" xxx) <
 		br. br. p2<>>
 	a<
-	<<aaaaa>><<bbbbb>>
+	<<aaaaa>> <<bbbbb>>
 	br.
 	br.
-        .(lt)
-        bbb <
-            <<bbbb>>
+        .(lt) .(quot)
+        b2 <
+            <<b-content>>
         >
 	<<cccc>>
 	>
-	c <- <<c s|   alalalala
+	c <- <<i|   alalalala
 		bbbbb
 		cccc>>
 

@@ -5,8 +5,9 @@ package xmla;
 //import java.beans.Beans;
 import java.io.*;
 import java.util.ArrayList;
-import static java.util.Arrays.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -26,15 +27,17 @@ enum TextFmt {
     RAW,
     LINE,
     STRIP,
-    COMPACT;
-//    INDENT,
+    COMPACT,
+    INDENT;
     
+    // Like valueOf() but more flexible
     public static TextFmt fromString(String s) {
         return switch (s) {
             case "RAW", "raw", "R", "r"         -> RAW;
             case "LINE", "line", "L", "l"       -> LINE;
             case "STRIP", "strip", "S", "s"     -> STRIP;
             case "COMPACT", "compact", "C", "c" -> COMPACT;
+            case "INDENT", "indent", "I", "i"   -> INDENT;
             default                             -> RAW;
         };
     }
@@ -52,9 +55,17 @@ public class App {
         doc = docBuilder.newDocument();
     }
 
+    protected void normalizeDoc() {
+        DOMConfiguration docConfig = doc.getDomConfig();
+        docConfig.setParameter("namespaces", Boolean.TRUE);
+        docConfig.setParameter("infoset", Boolean.TRUE); //?
+        doc.normalizeDocument();
+    }
+    
     protected String dumpXml() throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
+        normalizeDoc(); // TBH no effect
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(new StringWriter()); // new File("C:\\testing.xml"));
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -111,9 +122,11 @@ public class App {
 class MyXmlaAnalyzer extends XmlaAnalyzer {
 
     private final Document doc;
+    private static String NL; // system new-line representation
 
     public MyXmlaAnalyzer(Document doc) {
         this.doc = doc;
+        NL = System.getProperty("line.separator");
     }
 
     protected static String chop(String s) {
@@ -139,6 +152,22 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         return s.substring(2, len - 1);
     }
     
+    protected static int blankPrefixSize(String s) {
+        int i = 0;
+        while (i < s.length() && (' ' == s.charAt(i) || '\t' == s.charAt(i)))
+            i++;
+        return i;
+    }
+    
+    protected static String reindent(String s) {
+        List<String> lines = Arrays.asList(s.split("(\r|\n)+"));
+        int minIdent = lines.stream().map(MyXmlaAnalyzer::blankPrefixSize).min(Integer::compare).get();
+        return lines
+                .stream()
+                .map(ln -> ln.substring(minIdent))
+                .collect(Collectors.joining(NL));
+    }
+
     protected static String formatTextBlock(String s, List<TextFmt> fmts) {
         if (fmts.isEmpty()) return s;
         else {
@@ -149,11 +178,13 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 case LINE    -> formatTextBlock(s.replaceAll("(\r|\n)+", " "), fmts);
                 case STRIP   -> formatTextBlock(s.strip(), fmts);
                 case COMPACT -> formatTextBlock(s.replaceAll("(\r|\n|\t| )+", " "), fmts);
-//                case INDENT -> ;
+                case INDENT  -> formatTextBlock(reindent(s), fmts);
             };
         }
     }
 
+    // FIXME SPEC still is not shown like .(lt) -> &lt;
+    
     /////////////////////////////////////////////////////////////////
     //                           Handlers
     /////////////////////////////////////////////////////////////////
@@ -225,7 +256,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             default -> { spec = blocks[0]; text = blocks[1]; }
         }
         if (0 < spec.length()) {
-            var fmts = asList(spec.split(" +")).stream().map(TextFmt::fromString).toList();
+            var fmts = Arrays.asList(spec.split(" +")).stream().map(TextFmt::fromString).toList();
             text = formatTextBlock(text, fmts);
         }
         Text t = doc.createTextNode(text);
@@ -290,6 +321,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         ArrayList values = getChildValues(node);
         final int len = values.size();
         if (1 == len) {
+            System.out.println();
             // TODO
         } else if (2 <= len) {
             Element tag = (Element) values.get(0);
@@ -308,9 +340,9 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             for (int i = 1; i < values.size(); i++) {
                 Object val = values.get(i);
                 switch (val) {
-                    case Text t -> tag.appendChild(t);
+                    case Text t             -> tag.appendChild(t);
                     case EntityReference er -> tag.appendChild(er);
-                    default -> tag.appendChild((Element)val);
+                    default                 -> tag.appendChild((Element) val);
                 }
             }
         }
@@ -327,7 +359,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             if (item instanceof Text) {
                 System.out.println(" text!");
             } else if (item instanceof EntityReference) {
-                System.out.println(" Ref!");
+                System.out.println(" Ref: " + item.toString());
             } else {
                 System.out.println(" NODE!");
             }
