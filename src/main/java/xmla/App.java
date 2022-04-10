@@ -28,7 +28,8 @@ enum BlockOpt {
     LINE,
     STRIP,
     COMPACT,
-    INDENT;
+    INDENT,
+    COMMENT;
     
     // Like valueOf() but more flexible
     public static BlockOpt fromString(String s) {
@@ -38,6 +39,7 @@ enum BlockOpt {
             case "STRIP", "strip", "S", "s"     -> STRIP;
             case "COMPACT", "compact", "C", "c" -> COMPACT;
             case "INDENT", "indent", "I", "i"   -> INDENT;
+            case "COMMENT", "comment", "!"      -> COMMENT;
             default                             -> RAW;
         };
     }
@@ -179,6 +181,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 case STRIP   -> formatTextBlock(s.strip(), fmts);
                 case COMPACT -> formatTextBlock(s.replaceAll("(\r|\n|\t| )+", " "), fmts);
                 case INDENT  -> formatTextBlock(reindent(s), fmts);
+                default      -> formatTextBlock(s, fmts);
             };
         }
     }
@@ -250,6 +253,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
     protected Node exitBlock(Token node) {
         String[] blocks = strip(node.getImage(), 2).split(" *\\|", 2);
         String text, spec;
+        boolean isComment = false;
         switch (blocks.length) {
             case 0  -> { spec = ""; text = ""; }
             case 1  -> { spec = ""; text = blocks[0]; }
@@ -258,9 +262,15 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         if (0 < spec.length()) {
             var fmts = Arrays.asList(spec.split(" +")).stream().map(BlockOpt::fromString).toList();
             text = formatTextBlock(text, fmts);
+            isComment = fmts.contains(BlockOpt.COMMENT);
         }
-        Text t = doc.createTextNode(text);
-        node.addValue(t);
+        if (isComment) {
+            Comment c = doc.createComment(text);
+            node.addValue(c);
+        } else {
+            Text t = doc.createTextNode(text);
+            node.addValue(t);
+        }
         return node;
     }
 
@@ -342,6 +352,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
                 switch (val) {
                     case Text t             -> tag.appendChild(t);
                     case EntityReference er -> tag.appendChild(er);
+                    case Comment c          -> tag.appendChild(c);
                     default                 -> tag.appendChild((Element) val);
                 }
             }
