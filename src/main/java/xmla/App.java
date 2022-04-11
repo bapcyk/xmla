@@ -251,7 +251,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
     @Override
     protected Node exitBlock(Token node) {
-        String[] blocks = strip(node.getImage(), 2).split(" *\\|", 2);
+        String[] blocks = strip(node.getImage(), 2).split(" *\\:", 2);
         String text, spec;
         boolean isComment = false;
         switch (blocks.length) {
