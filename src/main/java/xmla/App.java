@@ -259,6 +259,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             case 1  -> { spec = ""; text = blocks[0]; }
             default -> { spec = blocks[0]; text = blocks[1]; }
         }
+        text = text.replaceAll("(?i)\\.\\(lt\\)", "<").replaceAll("(?i)\\.\\(gt\\)", ">");
         if (0 < spec.length()) {
             var fmts = Arrays.asList(spec.split(" +")).stream().map(BlockOpt::fromString).toList();
             text = formatTextBlock(text, fmts);

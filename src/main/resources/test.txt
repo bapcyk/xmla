@@ -11,8 +11,8 @@ p1 <
         >
 	<<cccc>>
 	>
-	c <- <<!:   alalalala
-		bbbbb
+	c <- <<r:   alalalala
+		bbbbb .(lt) .(GT)
 		cccc>>
 
 >
