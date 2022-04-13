@@ -162,10 +162,9 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
     }
     
     protected static String reindent(String s) {
-        List<String> lines = Arrays.asList(s.split("(\r|\n)+"));
-        int minIdent = lines.stream().map(MyXmlaAnalyzer::blankPrefixSize).min(Integer::compare).get();
-        return lines
-                .stream()
+        String[] lines = s.split("(\r|\n)+");
+        int minIdent = Arrays.stream(lines).map(MyXmlaAnalyzer::blankPrefixSize).min(Integer::compare).get();
+        return Arrays.stream(lines)
                 .map(ln -> ln.substring(minIdent))
                 .collect(Collectors.joining(NL));
     }
@@ -233,8 +232,17 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
 
     @Override
     protected Node exitSpec(Token node) {
-        EntityReference ent = doc.createEntityReference(specAsEntity(node.getImage()));
-        node.addValue(ent);
+        String text = node.getImage();
+        text = text
+                .replaceAll("(?i)\\.\\(lt\\)", "<")
+                .replaceAll("(?i)\\.\\(gt\\)", ">")
+                .replaceAll("(?i)\\.\\(quot\\)", "\"")
+                .replaceAll("(?i)\\.\\(apos\\)", "'")
+                .replaceAll("(?i)\\.\\(amp\\)", "&");
+        
+//        EntityReference ent = doc.createEntityReference(specAsEntity(node.getImage()));
+        Text t = doc.createTextNode(text);
+        node.addValue(t);
         return node;
     }
 
@@ -261,7 +269,7 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         }
         text = text.replaceAll("(?i)\\.\\(lt\\)", "<").replaceAll("(?i)\\.\\(gt\\)", ">");
         if (0 < spec.length()) {
-            var fmts = Arrays.asList(spec.split(" +")).stream().map(BlockOpt::fromString).toList();
+            var fmts = Arrays.stream(spec.split(" +")).map(BlockOpt::fromString).toList();
             text = formatTextBlock(text, fmts);
             isComment = fmts.contains(BlockOpt.COMMENT);
         }
