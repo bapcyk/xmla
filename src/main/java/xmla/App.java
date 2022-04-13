@@ -30,17 +30,24 @@ enum BlockOpt {
     COMPACT,
     INDENT,
     COMMENT;
-    
+
     // Like valueOf() but more flexible
     public static BlockOpt fromString(String s) {
         return switch (s) {
-            case "RAW", "raw", "R", "r"         -> RAW;
-            case "LINE", "line", "L", "l"       -> LINE;
-            case "STRIP", "strip", "S", "s"     -> STRIP;
-            case "COMPACT", "compact", "C", "c" -> COMPACT;
-            case "INDENT", "indent", "I", "i"   -> INDENT;
-            case "COMMENT", "comment", "!"      -> COMMENT;
-            default                             -> RAW;
+            case "RAW", "raw", "R", "r" ->
+                RAW;
+            case "LINE", "line", "L", "l" ->
+                LINE;
+            case "STRIP", "strip", "S", "s" ->
+                STRIP;
+            case "COMPACT", "compact", "C", "c" ->
+                COMPACT;
+            case "INDENT", "indent", "I", "i" ->
+                INDENT;
+            case "COMMENT", "comment", "!" ->
+                COMMENT;
+            default ->
+                RAW;
         };
     }
 }
@@ -63,7 +70,7 @@ public class App {
         docConfig.setParameter("infoset", Boolean.TRUE); //?
         doc.normalizeDocument();
     }
-    
+
     protected String dumpXml() throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -95,7 +102,7 @@ public class App {
         }
     }
 
-    protected void xmlToXmla() {
+    protected void xmlToXmla(String filePath) {
     }
 
     public static void main(String[] args) {
@@ -110,7 +117,10 @@ public class App {
                     app.xmlaToXml(args[1]);
                     System.out.println(app.dumpXml());
                 } else if (args[0].equals("xml")) {
-                    System.out.println("AS XML");
+                    App app;
+                    app = new App();
+                    app.xmlToXmla(args[1]);
+//                    System.out.println(app.dumpXml());
                 }
             } catch (ParserConfigurationException | TransformerException e) {
                 e.printStackTrace();
@@ -121,6 +131,7 @@ public class App {
 }
 
 
+/// Parser
 class MyXmlaAnalyzer extends XmlaAnalyzer {
 
     private final Document doc;
@@ -153,14 +164,15 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         final int len = s.length();
         return s.substring(2, len - 1);
     }
-    
+
     protected static int blankPrefixSize(String s) {
         int i = 0;
-        while (i < s.length() && (' ' == s.charAt(i) || '\t' == s.charAt(i)))
+        while (i < s.length() && (' ' == s.charAt(i) || '\t' == s.charAt(i))) {
             i++;
+        }
         return i;
     }
-    
+
     protected static String reindent(String s) {
         String[] lines = s.split("(\r|\n)+");
         int minIdent = Arrays.stream(lines).map(MyXmlaAnalyzer::blankPrefixSize).min(Integer::compare).get();
@@ -170,23 +182,29 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
     }
 
     protected static String formatTextBlock(String s, List<BlockOpt> fmts) {
-        if (fmts.isEmpty()) return s;
-        else {
+        if (fmts.isEmpty()) {
+            return s;
+        } else {
             BlockOpt fmt = fmts.get(0);
             fmts = fmts.subList(1, fmts.size());
             return switch (fmt) {
-                case RAW     -> formatTextBlock(s, fmts);
-                case LINE    -> formatTextBlock(s.replaceAll("(\r|\n)+", " "), fmts);
-                case STRIP   -> formatTextBlock(s.strip(), fmts);
-                case COMPACT -> formatTextBlock(s.replaceAll("(\r|\n|\t| )+", " "), fmts);
-                case INDENT  -> formatTextBlock(reindent(s), fmts);
-                default      -> formatTextBlock(s, fmts);
+                case RAW ->
+                    formatTextBlock(s, fmts);
+                case LINE ->
+                    formatTextBlock(s.replaceAll("(\r|\n)+", " "), fmts);
+                case STRIP ->
+                    formatTextBlock(s.strip(), fmts);
+                case COMPACT ->
+                    formatTextBlock(s.replaceAll("(\r|\n|\t| )+", " "), fmts);
+                case INDENT ->
+                    formatTextBlock(reindent(s), fmts);
+                default ->
+                    formatTextBlock(s, fmts);
             };
         }
     }
 
     // FIXME SPEC still is not shown like .(lt) -> &lt;
-    
     /////////////////////////////////////////////////////////////////
     //                           Handlers
     /////////////////////////////////////////////////////////////////
@@ -233,16 +251,17 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
     @Override
     protected Node exitSpec(Token node) {
         String text = node.getImage();
-        text = text
-                .replaceAll("(?i)\\.\\(lt\\)", "<")
-                .replaceAll("(?i)\\.\\(gt\\)", ">")
-                .replaceAll("(?i)\\.\\(quot\\)", "\"")
-                .replaceAll("(?i)\\.\\(apos\\)", "'")
-                .replaceAll("(?i)\\.\\(amp\\)", "&");
-        
+        if (!text.isBlank()) {
+            text = text
+                    .replaceAll("(?i)\\.\\(lt\\)", "<")
+                    .replaceAll("(?i)\\.\\(gt\\)", ">")
+                    .replaceAll("(?i)\\.\\(quot\\)", "\"")
+                    .replaceAll("(?i)\\.\\(apos\\)", "'")
+                    .replaceAll("(?i)\\.\\(amp\\)", "&");
 //        EntityReference ent = doc.createEntityReference(specAsEntity(node.getImage()));
-        Text t = doc.createTextNode(text);
-        node.addValue(t);
+            Text t = doc.createTextNode(text);
+            node.addValue(t);
+        }
         return node;
     }
 
@@ -263,9 +282,18 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         String text, spec;
         boolean isComment = false;
         switch (blocks.length) {
-            case 0  -> { spec = ""; text = ""; }
-            case 1  -> { spec = ""; text = blocks[0]; }
-            default -> { spec = blocks[0]; text = blocks[1]; }
+            case 0 -> {
+                spec = "";
+                text = "";
+            }
+            case 1 -> {
+                spec = "";
+                text = blocks[0];
+            }
+            default -> {
+                spec = blocks[0];
+                text = blocks[1];
+            }
         }
         text = text.replaceAll("(?i)\\.\\(lt\\)", "<").replaceAll("(?i)\\.\\(gt\\)", ">");
         if (0 < spec.length()) {
@@ -359,10 +387,14 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
             for (int i = 1; i < values.size(); i++) {
                 Object val = values.get(i);
                 switch (val) {
-                    case Text t             -> tag.appendChild(t);
-                    case EntityReference er -> tag.appendChild(er);
-                    case Comment c          -> tag.appendChild(c);
-                    default                 -> tag.appendChild((Element) val);
+                    case Text t ->
+                        tag.appendChild(t);
+                    case EntityReference er ->
+                        tag.appendChild(er);
+                    case Comment c ->
+                        tag.appendChild(c);
+                    default ->
+                        tag.appendChild((Element) val);
                 }
             }
         }
