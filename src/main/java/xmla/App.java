@@ -109,6 +109,11 @@ public class App {
     protected String xmlToXmla(String filePath) {
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
+            
+            // Disable validating of DTD which leads to URL fetching:
+            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            factory.setFeature("http://xml.org/sax/features/validation", false);
+            
             SAXParser sax = factory.newSAXParser();
 
             MyXmlHandler myHandler = new MyXmlHandler();
