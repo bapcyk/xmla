@@ -24,9 +24,9 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
             </goals>
             <properties>
-                <exec.vmArgs></exec.vmArgs>
-                <exec.args>--enable-preview ${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>xmla test.txt</exec.appArgs>
+                <exec.vmArgs>--enable-preview</exec.vmArgs>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.appArgs>xml test.xml</exec.appArgs>
                 <exec.mainClass>xmla.App</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <exec.workingdir>d:/prj/eclipse-workspace/xmla/src/main/resources</exec.workingdir>
@@ -42,9 +42,9 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
             </goals>
             <properties>
-                <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
-                <exec.args>--enable-preview ${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>xmla test.txt</exec.appArgs>
+                <exec.vmArgs>--enable-preview -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.appArgs>xml test.xml</exec.appArgs>
                 <exec.mainClass>xmla.App</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
@@ -61,11 +61,11 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
             </goals>
             <properties>
-                <exec.vmArgs></exec.vmArgs>
-                <exec.args>--enable-preview ${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.vmArgs>--enable-preview</exec.vmArgs>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.mainClass>xmla.App</exec.mainClass>
                 <exec.executable>java</exec.executable>
-                <exec.appArgs>xmla test.txt</exec.appArgs>
+                <exec.appArgs>xml test.xml</exec.appArgs>
                 <exec.workingdir>d:/prj/eclipse-workspace/xmla/src/main/resources</exec.workingdir>
             </properties>
         </action>

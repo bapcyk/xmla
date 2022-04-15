@@ -7,6 +7,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -19,6 +21,9 @@ import net.percederberg.grammatica.parser.ParserCreationException;
 import net.percederberg.grammatica.parser.ParserLogException;
 import net.percederberg.grammatica.parser.Production;
 import net.percederberg.grammatica.parser.Token;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 import xmla.parser.XmlaAnalyzer;
 import xmla.parser.XmlaParser;
 
@@ -54,27 +59,17 @@ enum BlockOpt {
 
 
 public class App {
-
-    private final DocumentBuilder docBuilder;
-    private final Document doc;
-
-    App() throws ParserConfigurationException {
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        docBuilder = docFactory.newDocumentBuilder();
-        doc = docBuilder.newDocument();
-    }
-
-    protected void normalizeDoc() {
+    protected void normalizeDoc(Document doc) {
         DOMConfiguration docConfig = doc.getDomConfig();
         docConfig.setParameter("namespaces", Boolean.TRUE);
         docConfig.setParameter("infoset", Boolean.TRUE); //?
         doc.normalizeDocument();
     }
 
-    protected String dumpXml() throws TransformerException {
+    protected String dumpXml(Document doc) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
-        normalizeDoc(); // TBH no effect
+        normalizeDoc(doc); // TBH no effect
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(new StringWriter()); // new File("C:\\testing.xml"));
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -83,29 +78,60 @@ public class App {
         return xmlString;
     }
 
-    protected void xmlaToXml(String filePath) {
+    protected Document xmlaToXml(String filePath) {
         try {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
+
             XmlaParser parser = new XmlaParser(
                     new FileReader(new File(filePath)),
                     new MyXmlaAnalyzer(doc));
+
             parser.prepare();
             parser.parse();
+            return doc;
+        } catch (ParserConfigurationException e) {
+            System.out.format("Cannot configure parser: %s", e.getMessage());
+            return null;
         } catch (ParserCreationException e) {
             System.out.format("Cannot create parser: %s", e.getMessage());
-            System.exit(1);
+            return null;
         } catch (ParserLogException e) {
             System.out.format("Cannot parse: %s", e.getMessage());
-            System.exit(1);
+            return null;
         } catch (FileNotFoundException e) {
             System.out.format("Cannot find input file: %s", e.getMessage());
-            System.exit(1);
+            return null;
         }
     }
 
-    protected void xmlToXmla(String filePath) {
+    protected String xmlToXmla(String filePath) {
+        try {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser sax = factory.newSAXParser();
+
+            MyXmlHandler myHandler = new MyXmlHandler();
+            sax.parse(new File(filePath), myHandler);
+            String res = myHandler.content();
+            return res;
+        } catch (ParserConfigurationException e) {
+            System.out.format("Cannot configure SAX parser: %s", e.getMessage());            
+            return null;
+        } catch (SAXException e) {
+            System.out.format("Cannot create SAX parser: %s", e.getMessage());
+            return null;
+        } catch (IOException e) {
+            System.out.format("Cannot read file: %s", e.getMessage());
+            return null;
+        }
     }
 
-    public static void main(String[] args) {
+    /////////////////////////// MAIN ////////////////////////////
+    //      To test run: 1) xmla test.txt 2) xml test.xml
+    /////////////////////////////////////////////////////////////
+    
+    public static void main(String[] args) throws SAXException {
         if (2 != args.length) {
             System.out.println("Command line error: xmla|xml FILE");
             System.exit(1);
@@ -114,20 +140,67 @@ public class App {
                 if (args[0].equals("xmla")) {
                     App app;
                     app = new App();
-                    app.xmlaToXml(args[1]);
-                    System.out.println(app.dumpXml());
+                    Document doc = app.xmlaToXml(args[1]);
+                    if (null == doc)
+                        System.exit(1);
+                    else
+                        System.out.println(app.dumpXml(doc));
                 } else if (args[0].equals("xml")) {
                     App app;
                     app = new App();
-                    app.xmlToXmla(args[1]);
-//                    System.out.println(app.dumpXml());
+                    String res = app.xmlToXmla(args[1]);
+                    if (null == res)
+                        System.exit(1);
+                    else
+                        System.out.println(res);
                 }
-            } catch (ParserConfigurationException | TransformerException e) {
+            } catch (TransformerException e) {
                 e.printStackTrace();
             }
         }
     }
 
+}
+
+
+class MyXmlHandler extends DefaultHandler {
+
+    int level;
+    StringBuilder out;
+
+    public MyXmlHandler() {
+        level = 0;
+        out = new StringBuilder();
+    }
+
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
+        level++;
+    }
+
+    @Override
+    public void endElement(String uri, String localName, String qName) {
+        level--;
+    }
+
+    @Override
+    public void characters(char ch[], int start, int length) {
+        ;
+    }
+
+    @Override
+    public void startDocument() {
+        System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+    }
+
+    @Override
+    public void endDocument() {
+        ;
+    }
+
+    public String content() {
+        return out.toString();
+    }
 }
 
 
