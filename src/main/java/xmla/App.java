@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -60,6 +58,7 @@ enum BlockOpt {
 
 
 public class App {
+
     protected void normalizeDoc(Document doc) {
         DOMConfiguration docConfig = doc.getDomConfig();
         docConfig.setParameter("namespaces", Boolean.TRUE);
@@ -110,11 +109,11 @@ public class App {
     protected String xmlToXmla(String filePath) {
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
-            
+
             // Disable validating of DTD which leads to URL fetching:
             factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             factory.setFeature("http://xml.org/sax/features/validation", false);
-            
+
             SAXParser sax = factory.newSAXParser();
 
             MyXmlHandler myHandler = new MyXmlHandler(4, 80);
@@ -122,7 +121,7 @@ public class App {
             String res = myHandler.content();
             return res;
         } catch (ParserConfigurationException e) {
-            System.out.format("Cannot configure SAX parser: %s", e.getMessage());            
+            System.out.format("Cannot configure SAX parser: %s", e.getMessage());
             return null;
         } catch (SAXException e) {
             System.out.format("Cannot create SAX parser: %s", e.getMessage());
@@ -136,7 +135,6 @@ public class App {
     /////////////////////////// MAIN ////////////////////////////
     //      To test run: 1) xmla test.txt 2) xml test.xml
     /////////////////////////////////////////////////////////////
-    
     public static void main(String[] args) throws SAXException {
         if (2 != args.length) {
             System.out.println("Command line error: xmla|xml FILE");
@@ -147,18 +145,20 @@ public class App {
                     App app;
                     app = new App();
                     Document doc = app.xmlaToXml(args[1]);
-                    if (null == doc)
+                    if (null == doc) {
                         System.exit(1);
-                    else
+                    } else {
                         System.out.println(app.dumpXml(doc));
+                    }
                 } else if (args[0].equals("xml")) {
                     App app;
                     app = new App();
                     String res = app.xmlToXmla(args[1]);
-                    if (null == res)
+                    if (null == res) {
                         System.exit(1);
-                    else
+                    } else {
                         System.out.println(res);
+                    }
                 }
             } catch (TransformerException e) {
                 e.printStackTrace();
@@ -182,21 +182,27 @@ class MyXmlHandler extends DefaultHandler {
         out = new LinkedList<>();
     }
 
-    protected String indent() { return " ".repeat(tabSize * level); }
-    
+    protected String indent() {
+        return " ".repeat(tabSize * level);
+    }
+
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
         String line = indent() + qName;
         int i = 0;
         for (; i < attributes.getLength(); i++) {
-            if (0 == i) line += "(";
+            if (0 == i) {
+                line += "(";
+            }
             String a = attributes.getQName(i) + "=" + "\"" + attributes.getValue(i) + "\"";
             if (line.length() >= maxLine) {
                 out.add(line);
                 line = indent();
             }
-            line += 0 == i? a : " " + a;
-            if (attributes.getLength() - 1 == i) line += ")";
+            line += 0 == i ? a : " " + a;
+            if (attributes.getLength() - 1 == i) {
+                line += ")";
+            }
         }
         line += " <";
         out.add(line);
@@ -219,10 +225,19 @@ class MyXmlHandler extends DefaultHandler {
         }
     }
 
+    protected static String replaceSpec(String text) {
+        return text
+                .replaceAll("<", ".(lt)")
+                .replaceAll(">",".(gt)")
+                .replaceAll("\"", ".(quot)")
+                .replaceAll("'", ".(apos)")
+                .replaceAll("&", ".(amp)");
+    }
+
     @Override
     public void characters(char ch[], int start, int length) {
         var text = new String(Arrays.copyOfRange(ch, start, start + length));
-        text = text.trim();
+        text = replaceSpec(text.trim());
         if (!text.isBlank()) {
             if (!out.isEmpty()) {
                 int lastIndex = out.size() - 1;
