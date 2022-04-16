@@ -22,17 +22,10 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/net.percederberg.grammatica/grammatica -->
         <dependency>
             <groupId>net.percederberg.grammatica</groupId>
             <artifactId>grammatica</artifactId>
             <version>1.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.speedment.common</groupId>
-            <artifactId>tuple</artifactId>
-            <version>3.2.10</version>
         </dependency>
 
         <dependency>
@@ -86,7 +79,79 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>xmla.App</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                
+                <!--executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>client</classifier>
+                            <includes>
+                                <include>grammatica</include>
+                                <include>jcommander</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions-->
+                
+                                                
+            </plugin>
+
+            <!--plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                            <excludeScope>provided</excludeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin-->
+      
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+      
         </plugins>
+
     </build>
 
 </project>
