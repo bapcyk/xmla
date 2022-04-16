@@ -206,13 +206,36 @@ class MyXmlHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) {
         level--;
-        String indent = " ".repeat(tabSize * level);
-        out.add(indent + ">");
+        if (!out.isEmpty()) {
+            int lastIndex = out.size() - 1;
+            String lastLine = out.get(lastIndex);
+            if (lastLine.endsWith("<")) {
+                // opened element, no attributes, no elements in it
+                lastLine = lastLine.replaceAll("\\ *<", ".");
+                out.set(lastIndex, lastLine);
+            } else {
+                out.add(indent() + ">");
+            }
+        }
     }
 
     @Override
     public void characters(char ch[], int start, int length) {
-        ;
+        var text = new String(Arrays.copyOfRange(ch, start, start + length));
+        text = text.trim();
+        if (!text.isBlank()) {
+            if (!out.isEmpty()) {
+                int lastIndex = out.size() - 1;
+                String lastLine = out.get(lastIndex);
+                if (lastLine.endsWith(">>")) {
+                    lastLine = lastLine.replaceAll("\\ *>>", "");
+                    out.set(lastIndex, lastLine);
+                    out.add(indent() + text + ">>");
+                    return;
+                }
+            }
+            out.add(indent() + "<<" + text + ">>");
+        }
     }
 
     @Override
