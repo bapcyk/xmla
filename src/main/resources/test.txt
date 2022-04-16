@@ -1,0 +1,18 @@
+p1 <
+	a(href=www name="some name" xxx) <
+		br. br. p2<>>
+	a<
+	<<aaaaa>> <<bbbbb>>
+	br.
+	br.
+        .(lt) .(quot) .(gt) .(amp)
+        b2 <
+            <<b-content>>
+        >
+	<<cccc>>
+	>
+	c <- <<r:   alalalala
+		bbbbb .(lt) .(GT)
+		cccc>>
+
+>

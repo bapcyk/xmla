@@ -1,0 +1,25 @@
+!DOCTYPE(html) <
+  html <
+    body <
+      h1 <- Title one
+      h1 <- Title two
+      p <- <<Paragraph
+             One line
+             Second line
+         >>
+      p < << .(blk)
+          para
+          para
+          para>>
+      >
+      p < br. br .(lt) >
+      p < lt >
+      a(href=https://www.w3schools.com) <- This is a link
+    >
+  >
+>
+
+for(var="i j k" from="1 2 4" to=100) <
+  var(int i)<>
+  print <- <<i+10>>
+>

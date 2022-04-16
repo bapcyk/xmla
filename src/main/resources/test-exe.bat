@@ -1,0 +1,1 @@
+mvn exec:java -Dexec.args="xmla src/main/resources/test.txt"

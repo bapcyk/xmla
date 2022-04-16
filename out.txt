@@ -1,0 +1,59 @@
+
+D:\prj\eclipse-workspace\xmla>d:\apps\Java64\bin\java.exe -cp d:\apps\maven-repo\net\percederberg\grammatica\grammatica\1.5\grammatica-1.5.jar net.percederberg.grammatica.Grammatica d:/prj/eclipse-workspace/xmla/src/main/resources/xmla.grammar --parse d:/prj/eclipse-workspace/xmla/src/main/resources/test.txt 
+Parse tree from d:\prj\eclipse-workspace\xmla\src\main\resources\test.txt:
+Go(2001)
+  Node(2005)
+    Tag(2004)
+      ATOM(1002): "p1", line: 1, col: 1
+    TAG_OPEN(1005): "<", line: 1, col: 4
+    NodeCont(2006)
+      Node(2005)
+        Tag(2004)
+          ATOM(1002): "a", line: 2, col: 2
+          Attrs(2003)
+            ATTRS_OPEN(1003): "(", line: 2, col: 3
+            Attr(2002)
+              ATOM(1002): "href", line: 2, col: 4
+              IS(1011): "=", line: 2, col: 8
+              ATTR_STR(1010): ""www"", line: 2, col: 9
+            ATTRS_CLOSE(1004): ")", line: 2, col: 14
+        TAG_OPEN(1005): "<", line: 2, col: 16
+        NodeCont(2006)
+          Node(2005)
+            SINGLE_TAG(1007): "br.", line: 3, col: 3
+          Node(2005)
+            SINGLE_TAG(1007): "br.", line: 3, col: 7
+          Node(2005)
+            Tag(2004)
+              ATOM(1002): "p2", line: 3, col: 11
+            TAG_OPEN(1005): "<", line: 3, col: 13
+            TAG_CLOSE(1006): ">", line: 3, col: 14
+        TAG_CLOSE(1006): ">", line: 3, col: 15
+      Node(2005)
+        Tag(2004)
+          ATOM(1002): "a", line: 4, col: 2
+        TAG_OPEN(1005): "<", line: 4, col: 3
+        NodeCont(2006)
+          BLOCK(1012): "<<aaaaa>>", line: 5, col: 2
+          BLOCK(1012): "<<bbbbb>>", line: 5, col: 11
+          Node(2005)
+            SINGLE_TAG(1007): "br.", line: 6, col: 2
+          Node(2005)
+            SINGLE_TAG(1007): "br.", line: 7, col: 2
+          SPEC(1009): ".(lt)", line: 8, col: 9
+          Node(2005)
+            Tag(2004)
+              ATOM(1002): "bbb", line: 9, col: 9
+            TAG_OPEN(1005): "<", line: 9, col: 13
+            NodeCont(2006)
+              BLOCK(1012): "<<bbbb>>", line: 10, col: 13
+            TAG_CLOSE(1006): ">", line: 11, col: 9
+          BLOCK(1012): "<<cccc>>", line: 12, col: 2
+        TAG_CLOSE(1006): ">", line: 13, col: 2
+      Node(2005)
+        Tag(2004)
+          ATOM(1002): "c", line: 14, col: 2
+        LINE_TAG(1008): "<-", line: 14, col: 4
+        NodeCont(2006)
+          BLOCK(1012): "<<block text| alalalala(...)", line: 14, col: 7
+    TAG_CLOSE(1006): ">", line: 18, col: 1
