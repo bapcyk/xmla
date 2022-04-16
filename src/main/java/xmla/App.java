@@ -271,7 +271,7 @@ class MyXmlHandler extends DefaultHandler {
 //        return s.replaceAll("\\s+$", "");
 //    }
 
-    // TODO compact mode; &#NNNN; (numeric entities)?
+    // TODO &#NNNN; (numeric entities)? Instructions (like <!DOCUMENT ...>)
     @Override
     public void characters(char ch[], int start, int length) {
         var text = new String(Arrays.copyOfRange(ch, start, start + length));
