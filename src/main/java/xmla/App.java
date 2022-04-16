@@ -6,6 +6,7 @@ package xmla;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -116,8 +117,8 @@ public class App {
             
             SAXParser sax = factory.newSAXParser();
 
-            MyXmlHandler myHandler = new MyXmlHandler();
-            sax.parse(new File(filePath), myHandler);
+            MyXmlHandler myHandler = new MyXmlHandler(4, 80);
+            sax.parse(new File(filePath), myHandler); // how to handle file does not exist in the right way?
             String res = myHandler.content();
             return res;
         } catch (ParserConfigurationException e) {
@@ -171,21 +172,42 @@ public class App {
 class MyXmlHandler extends DefaultHandler {
 
     int level;
-    StringBuilder out;
+    final int tabSize, maxLine;
+    List<String> out;
 
-    public MyXmlHandler() {
+    public MyXmlHandler(int tabSize, int maxLine) {
+        this.tabSize = tabSize;
+        this.maxLine = maxLine;
         level = 0;
-        out = new StringBuilder();
+        out = new LinkedList<>();
     }
 
+    protected String indent() { return " ".repeat(tabSize * level); }
+    
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
+        String line = indent() + qName;
+        int i = 0;
+        for (; i < attributes.getLength(); i++) {
+            if (0 == i) line += "(";
+            String a = attributes.getQName(i) + "=" + "\"" + attributes.getValue(i) + "\"";
+            if (line.length() >= maxLine) {
+                out.add(line);
+                line = indent();
+            }
+            line += 0 == i? a : " " + a;
+            if (attributes.getLength() - 1 == i) line += ")";
+        }
+        line += " <";
+        out.add(line);
         level++;
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) {
         level--;
+        String indent = " ".repeat(tabSize * level);
+        out.add(indent + ">");
     }
 
     @Override
@@ -204,7 +226,7 @@ class MyXmlHandler extends DefaultHandler {
     }
 
     public String content() {
-        return out.toString();
+        return String.join("\n", out);
     }
 }
 
