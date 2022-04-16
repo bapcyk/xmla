@@ -127,7 +127,7 @@ public class App {
         }
     }
 
-    protected String xmlToXmla(String filePath) {
+    protected String xmlToXmla(int tabSize, int maxLine, boolean compact, String filePath) {
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
 
@@ -137,7 +137,7 @@ public class App {
 
             SAXParser sax = factory.newSAXParser();
 
-            MyXmlHandler myHandler = new MyXmlHandler(4, 80, true);
+            MyXmlHandler myHandler = new MyXmlHandler(tabSize, maxLine, compact);
             sax.parse(new File(filePath), myHandler); // how to handle file does not exist in the right way?
             String res = myHandler.content();
             return res;
@@ -154,7 +154,7 @@ public class App {
     }
 
     /////////////////////////// MAIN ////////////////////////////
-    //      To test run: 1) xmla test.txt 2) xml test.xml
+    //      To test run: 1) -t XMLA test.txt 2) -t XML test.xml
     /////////////////////////////////////////////////////////////
     public static void main(String[] args) throws SAXException {
         var app = new App();
@@ -183,7 +183,7 @@ public class App {
                 } else {
                     App app;
                     app = new App();
-                    String res = app.xmlToXmla(cliInputFile);
+                    String res = app.xmlToXmla(cliTabSize, cliMaxLine, cliCompact, cliInputFile);
                     if (null == res) {
                         System.exit(1);
                     } else {
@@ -199,15 +199,18 @@ public class App {
 }
 
 
+// SAX parser of XML
 class MyXmlHandler extends DefaultHandler {
 
     int level;
     final int tabSize, maxLine;
+    final boolean compact;
     List<String> out;
 
     public MyXmlHandler(int tabSize, int maxLine, boolean compact) {
         this.tabSize = tabSize;
         this.maxLine = maxLine;
+        this.compact = compact;
         level = 0;
         out = new LinkedList<>();
     }
@@ -247,7 +250,7 @@ class MyXmlHandler extends DefaultHandler {
             String lastLine = out.get(lastIndex);
             if (lastLine.endsWith("<")) {
                 // opened element, no attributes, no elements in it
-                lastLine = lastLine.replaceAll("\\ *<", ".");
+                lastLine = lastLine.replaceAll("\\s*<", ".");
                 out.set(lastIndex, lastLine);
             } else {
                 out.add(indent() + ">");
@@ -264,6 +267,11 @@ class MyXmlHandler extends DefaultHandler {
                 .replaceAll("&", ".(amp)");
     }
 
+//    protected static String trimRight(String s) {
+//        return s.replaceAll("\\s+$", "");
+//    }
+
+    // TODO compact mode; &#NNNN; (numeric entities)?
     @Override
     public void characters(char ch[], int start, int length) {
         var text = new String(Arrays.copyOfRange(ch, start, start + length));
@@ -273,9 +281,12 @@ class MyXmlHandler extends DefaultHandler {
                 int lastIndex = out.size() - 1;
                 String lastLine = out.get(lastIndex);
                 if (lastLine.endsWith(">>")) {
-                    lastLine = lastLine.replaceAll("\\ *>>", "");
+                    lastLine = lastLine.replaceAll("\\s*>>", "");
                     out.set(lastIndex, lastLine);
-                    out.add(indent() + text + ">>");
+                    if (compact && maxLine >= lastLine.length())
+                        out.set(lastIndex, lastLine + " " + text + ">>");
+                    else
+                        out.add(indent() + text + ">>");
                     return;
                 }
             }
