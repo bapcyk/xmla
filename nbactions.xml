@@ -26,7 +26,7 @@
             <properties>
                 <exec.vmArgs>--enable-preview</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>xml test.xml</exec.appArgs>
+                <exec.appArgs>--to XMLA test.xml</exec.appArgs>
                 <exec.mainClass>xmla.App</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <exec.workingdir>d:/prj/eclipse-workspace/xmla/src/main/resources</exec.workingdir>
@@ -44,7 +44,7 @@
             <properties>
                 <exec.vmArgs>--enable-preview -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>xml test.xml</exec.appArgs>
+                <exec.appArgs>--to XMLA test.xml</exec.appArgs>
                 <exec.mainClass>xmla.App</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
@@ -65,7 +65,7 @@
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.mainClass>xmla.App</exec.mainClass>
                 <exec.executable>java</exec.executable>
-                <exec.appArgs>xml test.xml</exec.appArgs>
+                <exec.appArgs>--to XMLA test.xml</exec.appArgs>
                 <exec.workingdir>d:/prj/eclipse-workspace/xmla/src/main/resources</exec.workingdir>
             </properties>
         </action>

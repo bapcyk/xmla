@@ -3,6 +3,7 @@ package xmla;
 
 // TODO remove dependency tuples?
 //import java.beans.Beans;
+import com.beust.jcommander.JCommander;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import xmla.parser.XmlaAnalyzer;
 import xmla.parser.XmlaParser;
+import com.beust.jcommander.Parameter;
 
 
 enum BlockOpt {
@@ -56,9 +58,28 @@ enum BlockOpt {
     }
 }
 
+enum ConvertTo { XML, XMLA }
 
 public class App {
-
+    @Parameter(names={"-h", "--help"}, help=true)
+    private boolean cliHelp = false;
+    
+    @Parameter(names={"-t", "--to"}, required=true, description="Convert to XML|XMLA")
+    private ConvertTo cliConvertTo;
+    
+    @Parameter(names={"-i", "--indent"}, description="Size of indentation one step in spaces")
+    private int cliTabSize = 4;
+    
+    @Parameter(names={"-l", "--line"}, description="Max line width")
+    private int cliMaxLine = 80;
+    
+    @Parameter(names={"-c", "--compact"}, description="Compact text blocks")
+    private boolean cliCompact = false;
+    
+    @Parameter
+    String cliInputFile;
+    
+    
     protected void normalizeDoc(Document doc) {
         DOMConfiguration docConfig = doc.getDomConfig();
         docConfig.setParameter("namespaces", Boolean.TRUE);
@@ -116,7 +137,7 @@ public class App {
 
             SAXParser sax = factory.newSAXParser();
 
-            MyXmlHandler myHandler = new MyXmlHandler(4, 80);
+            MyXmlHandler myHandler = new MyXmlHandler(4, 80, true);
             sax.parse(new File(filePath), myHandler); // how to handle file does not exist in the right way?
             String res = myHandler.content();
             return res;
@@ -136,24 +157,33 @@ public class App {
     //      To test run: 1) xmla test.txt 2) xml test.xml
     /////////////////////////////////////////////////////////////
     public static void main(String[] args) throws SAXException {
-        if (2 != args.length) {
-            System.out.println("Command line error: xmla|xml FILE");
-            System.exit(1);
+        var app = new App();
+        JCommander.newBuilder()
+            .addObject(app)
+            .build()
+            .parse(args);
+        app.run();
+    }
+    
+    protected void run() throws SAXException {
+        if (cliHelp) {
+            System.out.println("--to,-t XMLA|XML [--indent,-i N] [--line,-l WIDTH] [--compact,-c] <FILE>");
+            System.exit(0);
         } else {
             try {
-                if (args[0].equals("xmla")) {
+                if (ConvertTo.XML == cliConvertTo) {
                     App app;
                     app = new App();
-                    Document doc = app.xmlaToXml(args[1]);
+                    Document doc = app.xmlaToXml(cliInputFile);
                     if (null == doc) {
                         System.exit(1);
                     } else {
                         System.out.println(app.dumpXml(doc));
                     }
-                } else if (args[0].equals("xml")) {
+                } else {
                     App app;
                     app = new App();
-                    String res = app.xmlToXmla(args[1]);
+                    String res = app.xmlToXmla(cliInputFile);
                     if (null == res) {
                         System.exit(1);
                     } else {
@@ -175,7 +205,7 @@ class MyXmlHandler extends DefaultHandler {
     final int tabSize, maxLine;
     List<String> out;
 
-    public MyXmlHandler(int tabSize, int maxLine) {
+    public MyXmlHandler(int tabSize, int maxLine, boolean compact) {
         this.tabSize = tabSize;
         this.maxLine = maxLine;
         level = 0;
@@ -259,9 +289,7 @@ class MyXmlHandler extends DefaultHandler {
     }
 
     @Override
-    public void endDocument() {
-        ;
-    }
+    public void endDocument() {}
 
     public String content() {
         return String.join("\n", out);
@@ -269,7 +297,7 @@ class MyXmlHandler extends DefaultHandler {
 }
 
 
-/// Parser
+/// Parser of XMLA
 class MyXmlaAnalyzer extends XmlaAnalyzer {
 
     private final Document doc;
