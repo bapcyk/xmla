@@ -1,18 +1,42 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
-  <!-- TODO: a jarjar format would be better -->
-  <id>full</id>
-  <formats>
-    <format>jar</format>
-  </formats>
-  <includeBaseDirectory>false</includeBaseDirectory>
-  <dependencySets>
-    <dependencySet>
-      <outputDirectory>/</outputDirectory>
-      <useProjectArtifact>true</useProjectArtifact>
-      <unpack>true</unpack>
-      <scope>runtime</scope>
-    </dependencySet>
-  </dependencySets>
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+    <!-- TODO: a jarjar format would be better -->
+    <id>full</id>
+
+    <formats>
+        <format>jar</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+  
+  <fileSets>
+      <fileSet>
+          <useDefaultExcludes>true</useDefaultExcludes>
+          <outputDirectory>/</outputDirectory>
+          <excludes>
+              <exclude>src/**</exclude>
+              <exclude>target/**</exclude>
+              <exclude>.settings/**</exclude>
+              <!--exclude>src/main/resources/xmla.grammar</exclude-->
+              <exclude>**/README.*</exclude>
+              <exclude>**/nbactions.xml</exclude>
+              <exclude>**/pom.xml</exclude>
+              <exclude>.netbeans_automatic_build</exclude>
+              <exclude>.project</exclude>
+              <exclude>**/xmla.bat</exclude>              
+          </excludes>
+      </fileSet>
+  </fileSets>
+  
+  
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+
 </assembly>
