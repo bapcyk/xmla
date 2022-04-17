@@ -22,12 +22,12 @@ ATTRS_OPEN     = "("
 ATTRS_CLOSE    = ")"
 TAG_OPEN       = "<"
 TAG_CLOSE      = ">"
-SINGLE_TAG     = <<[a-zA-Z_][a-zA-Z0-9_]*\.>>
 LINE_TAG       = "<-"
 SPEC           = <<\.\([a-zA-Z0-9_#]+\)>>
 ATTR_STR       = <<"[^"]*">>
 IS             = "="
 BLOCK          = <<\<\<[^>]*\>\>>>
+DOT            = "."
 
 %productions%
 
@@ -36,5 +36,5 @@ Go = Node; // Node [Go];
 Attr           = ATOM | ATOM IS ATOM | ATOM IS ATTR_STR;
 Attrs          = ATTRS_OPEN Attr+ ATTRS_CLOSE;
 Tag            = ATOM Attrs?;
-Node           = SINGLE_TAG | Tag (LINE_TAG NodeCont | TAG_OPEN NodeCont? TAG_CLOSE);
+Node           = Tag (DOT | LINE_TAG NodeCont | TAG_OPEN NodeCont? TAG_CLOSE);
 NodeCont       = (BLOCK | SPEC | Node)+; // NodeCont?;

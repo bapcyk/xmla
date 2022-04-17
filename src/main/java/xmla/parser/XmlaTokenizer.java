@@ -84,12 +84,6 @@ public class XmlaTokenizer extends Tokenizer {
                                    ">");
         addPattern(pattern);
 
-        pattern = new TokenPattern(XmlaConstants.SINGLE_TAG,
-                                   "SINGLE_TAG",
-                                   TokenPattern.REGEXP_TYPE,
-                                   "[a-zA-Z_][a-zA-Z0-9_]*\\.");
-        addPattern(pattern);
-
         pattern = new TokenPattern(XmlaConstants.LINE_TAG,
                                    "LINE_TAG",
                                    TokenPattern.STRING_TYPE,
@@ -118,6 +112,12 @@ public class XmlaTokenizer extends Tokenizer {
                                    "BLOCK",
                                    TokenPattern.REGEXP_TYPE,
                                    "<<[^>]*>>");
+        addPattern(pattern);
+
+        pattern = new TokenPattern(XmlaConstants.DOT,
+                                   "DOT",
+                                   TokenPattern.STRING_TYPE,
+                                   ".");
         addPattern(pattern);
     }
 }

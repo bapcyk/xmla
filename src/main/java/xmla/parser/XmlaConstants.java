@@ -52,32 +52,32 @@ public interface XmlaConstants {
     /**
      * A token identity constant.
      */
-    public static final int SINGLE_TAG = 1007;
+    public static final int LINE_TAG = 1007;
 
     /**
      * A token identity constant.
      */
-    public static final int LINE_TAG = 1008;
+    public static final int SPEC = 1008;
 
     /**
      * A token identity constant.
      */
-    public static final int SPEC = 1009;
+    public static final int ATTR_STR = 1009;
 
     /**
      * A token identity constant.
      */
-    public static final int ATTR_STR = 1010;
+    public static final int IS = 1010;
 
     /**
      * A token identity constant.
      */
-    public static final int IS = 1011;
+    public static final int BLOCK = 1011;
 
     /**
      * A token identity constant.
      */
-    public static final int BLOCK = 1012;
+    public static final int DOT = 1012;
 
     /**
      * A production node identity constant.

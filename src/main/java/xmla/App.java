@@ -412,12 +412,12 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         return node;
     }
 
-    @Override
+    /*@Override
     protected Node exitSingleTag(Token node) {
         Element el = doc.createElement(chop(node.getImage()));
         node.addValue(el);
         return node;
-    }
+    }*/
 
     @Override
     protected Node exitLineTag(Token node) {
@@ -545,16 +545,19 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         ArrayList values = getChildValues(node);
         final int len = values.size();
         if (1 == len) {
-            System.out.println();
-            // TODO
+//            System.out.println();
+            // TODO?
         } else if (2 <= len) {
             Element tag = (Element) values.get(0);
             String v1 = (String) values.get(1);
-            if (v1.equals("<-")) {
-                System.out.println("PPP <-");
+            if (v1.equals(".")) {
+                // TODO
+//                System.out.println(".");
+            } else if (v1.equals("<-")) {
+//                System.out.println("PPP <-");
             } else if (v1.equals("<")) {
                 // tag open
-                System.out.println("PPP <");
+//                System.out.println("PPP <");
             }
             if (">" == values.get(len - 1)) {
                 values.remove(len - 1);
@@ -586,11 +589,11 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         for (var item : values) {
 //                        System.out.println(item);
             if (item instanceof Text) {
-                System.out.println(" text!");
+//                System.out.println(" text!");
             } else if (item instanceof EntityReference) {
-                System.out.println(" Ref: " + item.toString());
+//                System.out.println(" Ref: " + item.toString());
             } else {
-                System.out.println(" NODE!");
+//                System.out.println(" NODE!");
             }
         }
         node.addValues(values);

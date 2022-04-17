@@ -49,9 +49,6 @@ public abstract class XmlaAnalyzer extends Analyzer {
         case XmlaConstants.TAG_CLOSE:
             enterTagClose((Token) node);
             break;
-        case XmlaConstants.SINGLE_TAG:
-            enterSingleTag((Token) node);
-            break;
         case XmlaConstants.LINE_TAG:
             enterLineTag((Token) node);
             break;
@@ -66,6 +63,9 @@ public abstract class XmlaAnalyzer extends Analyzer {
             break;
         case XmlaConstants.BLOCK:
             enterBlock((Token) node);
+            break;
+        case XmlaConstants.DOT:
+            enterDot((Token) node);
             break;
         case XmlaConstants.GO:
             enterGo((Production) node);
@@ -110,8 +110,6 @@ public abstract class XmlaAnalyzer extends Analyzer {
             return exitTagOpen((Token) node);
         case XmlaConstants.TAG_CLOSE:
             return exitTagClose((Token) node);
-        case XmlaConstants.SINGLE_TAG:
-            return exitSingleTag((Token) node);
         case XmlaConstants.LINE_TAG:
             return exitLineTag((Token) node);
         case XmlaConstants.SPEC:
@@ -122,6 +120,8 @@ public abstract class XmlaAnalyzer extends Analyzer {
             return exitIs((Token) node);
         case XmlaConstants.BLOCK:
             return exitBlock((Token) node);
+        case XmlaConstants.DOT:
+            return exitDot((Token) node);
         case XmlaConstants.GO:
             return exitGo((Production) node);
         case XmlaConstants.ATTR:
@@ -298,30 +298,6 @@ public abstract class XmlaAnalyzer extends Analyzer {
      *
      * @throws ParseException if the node analysis discovered errors
      */
-    protected void enterSingleTag(Token node) throws ParseException {
-    }
-
-    /**
-     * Called when exiting a parse tree node.
-     *
-     * @param node           the node being exited
-     *
-     * @return the node to add to the parse tree, or
-     *         null if no parse tree should be created
-     *
-     * @throws ParseException if the node analysis discovered errors
-     */
-    protected Node exitSingleTag(Token node) throws ParseException {
-        return node;
-    }
-
-    /**
-     * Called when entering a parse tree node.
-     *
-     * @param node           the node being entered
-     *
-     * @throws ParseException if the node analysis discovered errors
-     */
     protected void enterLineTag(Token node) throws ParseException {
     }
 
@@ -432,6 +408,30 @@ public abstract class XmlaAnalyzer extends Analyzer {
      * @throws ParseException if the node analysis discovered errors
      */
     protected Node exitBlock(Token node) throws ParseException {
+        return node;
+    }
+
+    /**
+     * Called when entering a parse tree node.
+     *
+     * @param node           the node being entered
+     *
+     * @throws ParseException if the node analysis discovered errors
+     */
+    protected void enterDot(Token node) throws ParseException {
+    }
+
+    /**
+     * Called when exiting a parse tree node.
+     *
+     * @param node           the node being exited
+     *
+     * @return the node to add to the parse tree, or
+     *         null if no parse tree should be created
+     *
+     * @throws ParseException if the node analysis discovered errors
+     */
+    protected Node exitDot(Token node) throws ParseException {
         return node;
     }
 
