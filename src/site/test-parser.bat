@@ -1,2 +1,1 @@
-REM d:\apps\Java64\bin\java.exe -cp d:\apps\maven-repo\net\percederberg\grammatica\grammatica\1.5\grammatica-1.5.jar net.percederberg.grammatica.Grammatica d:/prj/eclipse-workspace/xmla/src/main/resources/xmla.grammar --parse d:/prj/eclipse-workspace/xmla/src/main/resources/test.txt
-%JAVA_HOME%\bin\java.exe -cp d:\apps\maven-repo\net\percederberg\grammatica\grammatica\1.5\grammatica-1.5.jar net.percederberg.grammatica.Grammatica d:/prj/github/xmla/src/main/resources/xmla.grammar --parse d:/prj/github/xmla/src/site/test.txt
+%JAVA_HOME%\bin\java.exe -cp d:\apps\maven-repo\net\percederberg\grammatica\grammatica\1.5\grammatica-1.5.jar net.percederberg.grammatica.Grammatica d:/prj/github/xmla/src/main/resources/xmla.grammar --parse d:/prj/github/xmla/src/site/test.xmla

@@ -3,7 +3,7 @@
 
 ### Proof-of-concept
 
-Test: `--to XML test.xmla` and `--to XMLA test.xml`. Option `-h` is for full help.
+Test: `xmla.bat --to XML test.xmla` and `xmla.bat --to XMLA test.xml`. Option `-h` is for full help.
 
 <table>
   <tr>
