@@ -295,9 +295,7 @@ class MyXmlHandler extends DefaultHandler {
     }
 
     @Override
-    public void startDocument() {
-        System.out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
-    }
+    public void startDocument() {}
 
     @Override
     public void endDocument() {}
