@@ -27,6 +27,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import xmla.parser.XmlaAnalyzer;
 import xmla.parser.XmlaParser;
 import com.beust.jcommander.Parameter;
+import org.xml.sax.ext.DefaultHandler2;
 
 
 enum BlockOpt {
@@ -58,7 +59,12 @@ enum BlockOpt {
     }
 }
 
+
 enum ConvertTo { XML, XMLA }
+
+
+enum BlockKind { RAW, COMMENT }
+
 
 public class App {
     @Parameter(names={"-h", "--help"}, help=true)
@@ -138,6 +144,10 @@ public class App {
             SAXParser sax = factory.newSAXParser();
 
             MyXmlHandler myHandler = new MyXmlHandler(tabSize, maxLine, compact);
+            
+            // to get comment() events:
+            sax.getXMLReader().setProperty("http://xml.org/sax/properties/lexical-handler", myHandler);
+
             sax.parse(new File(filePath), myHandler); // how to handle file does not exist in the right way?
             String res = myHandler.content();
             return res;
@@ -200,7 +210,7 @@ public class App {
 
 
 // SAX parser of XML
-class MyXmlHandler extends DefaultHandler {
+class MyXmlHandler extends DefaultHandler2 {
 
     int level;
     final int tabSize, maxLine;
@@ -272,8 +282,7 @@ class MyXmlHandler extends DefaultHandler {
 //    }
 
     // TODO &#NNNN; (numeric entities)? Instructions (like <!DOCUMENT ...>)
-    @Override
-    public void characters(char ch[], int start, int length) {
+    protected void addBlock(BlockKind blockKind, char ch[], int start, int length) {
         var text = new String(Arrays.copyOfRange(ch, start, start + length));
         text = replaceSpec(text.trim());
         if (!text.isBlank()) {
@@ -290,8 +299,23 @@ class MyXmlHandler extends DefaultHandler {
                     return;
                 }
             }
-            out.add(indent() + "<<" + text + ">>");
+            String blockSpec = switch (blockKind) {
+                case RAW -> "";
+                case COMMENT -> "!:";
+                default -> "";
+            };
+            out.add(indent() + "<<" + blockSpec + text + ">>");
         }
+    }
+
+    @Override
+    public void characters(char ch[], int start, int length) {
+        addBlock(BlockKind.RAW, ch, start, length);
+    }
+    
+    @Override
+    public void comment(char[] ch, int start, int length) {
+        addBlock(BlockKind.COMMENT, ch, start, length);
     }
 
     @Override
@@ -379,7 +403,6 @@ class MyXmlaAnalyzer extends XmlaAnalyzer {
         }
     }
 
-    // FIXME SPEC still is not shown like .(lt) -> &lt;
     /////////////////////////////////////////////////////////////////
     //                           Handlers
     /////////////////////////////////////////////////////////////////
