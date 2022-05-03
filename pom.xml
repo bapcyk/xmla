@@ -37,7 +37,56 @@
     </dependencies>
 
     <build>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.akman</groupId>
+                    <artifactId>jlink-maven-plugin</artifactId>
+                    <version>0.1.8</version>
+                    <configuration>
+                        <modulepath>
+                            <dependencysets>
+                                <!-- add project dependencies to modulepath -->
+                                <dependencyset>
+                                    <!-- add project output (module) to modulepath -->
+                                    <includeoutput>true</includeoutput>
+                                    <!-- exclude automatic modules -->
+                                    <excludeautomatic>true</excludeautomatic>
+                                </dependencyset>
+                            </dependencysets>
+                        </modulepath>
+                        <noheaderfiles>true</noheaderfiles>
+                        <nomanpages>true</nomanpages>
+                        <compress>
+                            <compression>ZIP</compression>
+                        </compress>
+                        <stripdebug>true</stripdebug>
+                        <addmodules>
+                            <addmodule>java.base</addmodule>
+                            <addmodule>java.xml</addmodule>
+                        </addmodules>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+      
+      
         <plugins>
+        
+            <plugin>
+                <groupId>com.github.akman</groupId>
+                <artifactId>jlink-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jlink</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>        
+        
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -66,9 +115,8 @@
                         </configuration>
                     </execution>
                 </executions>
-
-
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
